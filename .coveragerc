@@ -1,0 +1,5 @@
+[run]
+include = sct_annotation/*
+omit = *migrations*, *tests*
+plugins =
+    django_coverage_plugin

@@ -1,0 +1,21 @@
+<form>
+    {% for key, value in description.items %}
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="{{ key }}">{{ key }}</label>
+        <div class="col-sm-10">
+            <input class="form-control" name="{{ key }}" type="text" value="{{ value }}"/>
+        </div>
+    </div>
+    {% endfor %}
+    <input name="dataset" type="hidden" value="{{ dataset }}"/>
+    <button type="submit" class="btn btn-primary">Update Description</button>
+</form>
+<hr/>
+<h5> Segmentated </h5>
+{% for seg in segmented %}
+{{ seg }}
+{% endfor %}
+<h5> Missing Segmentation</h5>
+{% for missing in missing_segmentation %}
+{{ missing }}
+{% endfor %}
