@@ -285,4 +285,4 @@ ADMIN_URL = r'^admin/'
 
 # Your common stuff: Below this line define 3rd party library settings
 # ------------------------------------------------------------------------------
-SCT_DATASET_ROOT = env('SCT_DATASET_ROOT', '/Volumes/sct_testing/large/')
+SCT_DATASET_ROOT = env('SCT_DATASET_ROOT', default='/Volumes/sct_testing/large/')
