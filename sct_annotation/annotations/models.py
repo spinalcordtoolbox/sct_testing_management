@@ -53,6 +53,9 @@ class Acquisition(models.Model):
             self.dataset_file = False
         super().save(*args, **kwargs)
 
+    def get_absolute_url(self):
+        return reverse('acqusition-detail', kwargs={'pk': self.pk})
+
 
 class Demographic(models.Model):
     GENDER = (('M', 'Male'), ('F', 'Female'))
@@ -78,7 +81,8 @@ class Image(models.Model):
     acquisition = models.ForeignKey(Acquisition,
                                     on_delete=models.CASCADE,
                                     related_name='images')
-    contrast = models.CharField(max_length=16)
+    contrast = models.CharField('Contrast details', max_length=16)
+    contrast_category = models.CharField(max_length=16)
     filename = models.CharField(max_length=512)
     start_coverage = models.CharField(max_length=16, null=True, blank=True)
     end_coverage = models.CharField(max_length=16, null=True, blank=True)
@@ -91,7 +95,7 @@ class Image(models.Model):
     gm_model = models.BooleanField(default=False)
 
     def __str__(self):
-        return f'{self.contrast} {self.start_coverage}:{self.end_coverage} {self.orientation}'
+        return f'{self.contrast} {self.acquisition}'
 
     def to_dict(self):
         return {
@@ -108,6 +112,9 @@ class Image(models.Model):
                 'gm_model': int(self.gm_model)
             }
         }
+
+    def get_absolute_url(self):
+        return reverse('image-detail', kwargs={'pk': self.pk})
 
 
 class LabeledImage(models.Model):
@@ -128,3 +135,6 @@ class LabeledImage(models.Model):
 
     def to_dict(self):
         return {'label': self.label, 'file': self.filename, 'rater': self.author}
+
+    def get_absolute_url(self):
+        return reverse('labeled-detail', kwargs={'pk': self.pk})
