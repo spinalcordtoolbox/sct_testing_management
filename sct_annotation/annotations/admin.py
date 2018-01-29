@@ -54,9 +54,13 @@ class LabeledImageAdmin(admin.StackedInline):
 
 @admin.register(models.Acquisition)
 class AcquisitionAdmin(admin.ModelAdmin):
-    list_display = ('study', 'center', 'subject')
-    readonly_fields = ('dataset_file', )
-    list_filter = (MissingDatasetFilter, 'images__ms_mapping', 'images__pam50')
+    list_display = ('center', 'study', 'subject')
+    list_filter = (
+        'demographic__pathology',
+        'images__contrast',
+        'images__ms_mapping',
+        'images__gm_model',
+        'images__pam50')
     search_fields = ('center', 'study')
     list_select_related = ('demographic',)
     inlines = [
@@ -70,17 +74,20 @@ class AcquisitionAdmin(admin.ModelAdmin):
 
     def publish_dataset(self, request, queryset):
         return JsonResponse([x.to_dict() for x in queryset], safe=False)
-    publish_dataset.short_description = 'Update the subject\'s dataset file'
+    publish_dataset.short_description = 'Download the dataset of the selected entries'
 
 
 @admin.register(models.Image)
 class ImageAdmin(admin.ModelAdmin):
-    fields = ('acquisition',
-              ('contrast', 'filename'),
-              ('start_coverage', 'end_coverage'),
-              ('orientation', 'resolution'),
-              ('pam50', 'ms_mapping', 'gm_model')
+    list_display = ('acquisition', 'contrast', 'filename')
+    fields = (
+        'acquisition',
+        ('contrast', 'filename'),
+        ('start_coverage', 'end_coverage'),
+        ('orientation', 'resolution'),
+        ('pam50', 'ms_mapping', 'gm_model')
     )
+    list_filter = ('contrast', 'pam50', 'ms_mapping', 'gm_model')
     inlines = [
         LabeledImageAdmin
     ]
