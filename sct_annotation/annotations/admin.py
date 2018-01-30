@@ -24,7 +24,7 @@ class MissingDatasetFilter(admin.SimpleListFilter):
 class ImageInline(admin.StackedInline):
     model = models.Image
     extra = 0
-    fields = ('contrast',
+    fields = ('contrast_category', 'contrast',
               ('pam50', 'ms_mapping', 'gm_model'),
               'filename',
               'get_edit_link')
@@ -57,7 +57,7 @@ class AcquisitionAdmin(admin.ModelAdmin):
     list_display = ('center', 'study', 'subject')
     list_filter = (
         'demographic__pathology',
-        'images__contrast',
+        'images__contrast_category',
         'images__ms_mapping',
         'images__gm_model',
         'images__pam50')
@@ -79,15 +79,15 @@ class AcquisitionAdmin(admin.ModelAdmin):
 
 @admin.register(models.Image)
 class ImageAdmin(admin.ModelAdmin):
-    list_display = ('acquisition', 'contrast', 'filename')
+    list_display = ('acquisition', 'contrast_category', 'contrast', 'filename')
     fields = (
         'acquisition',
-        ('contrast', 'filename'),
+        ('contrast_category', 'filename'),
         ('start_coverage', 'end_coverage'),
         ('orientation', 'resolution'),
         ('pam50', 'ms_mapping', 'gm_model')
     )
-    list_filter = ('contrast', 'pam50', 'ms_mapping', 'gm_model')
+    list_filter = ('contrast_category', 'pam50', 'ms_mapping', 'gm_model')
     inlines = [
         LabeledImageAdmin
     ]
