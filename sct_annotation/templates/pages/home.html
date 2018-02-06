@@ -1,1 +1,53 @@
 {% extends "base.html" %}
+
+{% block content %}
+<div class="jumbotron">
+    <h1>
+    Welcome to the SCT data management system
+    </h1>
+</div>
+{% if request.user.is_authenticated %}
+
+<p>Use the SCT data management system to:
+
+</p>
+<h4>Shortcuts</h4>
+<p>
+    <ul>
+        <li>
+            <a href="{% url 'admin:annotations_acquisition_changelist' %}">Goto the Acquisition page</a>
+        </li>
+        <li>
+            <a href="{% url 'admin:annotations_image_changelist">Goto the Image page</a>
+        </li>
+    </ul>
+</p>
+
+<h4>1) Enter new labeled images to a contrast image.</h4>
+<p>
+    When adding a new generated image to a contrast, the steps to follow are:
+    <ol>
+        <li>Save the file in the correct path.</li>
+        <li>Goto the <code>Acquisition</code> page, and find the subject in question. You can use the search field to find the entry by the <kbd>center</kbd>, <kbd>study</kbd> and <kbd>subject</kbd>.</li>
+        <li>In the <code>Acquisition</code> details page, you can see also the demographics of the acquisition and the list of images available grouped by contrast. CLick on <code>Edit image</code> to enter the <code>Image</code> details page.</li>
+        <li><strong>If the image entry does not exists.</strong>, make sure the contrast file exists and is named correctly. The file base name should be the same as the folder name. Click on <code>Add another Nifti Contrast</code> to create the new contrast entry. Enter the image details and click on <code>Save and continue editing</code> to proceed adding the labelled image details.</li>
+        <li>Click on <code>Add another Labelled image</code> to get the labelled image form and enter the details and save.</li>
+    </ol>
+</p>
+
+<h4>2) Build a custom dataset file.</h4>
+<p>
+    To generate a dataset json of the specific list of images, the steps to follow are:
+    <ol>
+        <li>Goto the <code>Acquisition</code> page.</li>
+        <li>You can use the filters on the right and the search field to get a list of interesting subjects.</li>
+        <li>Select the checkboxes of the interested subjects, and the dropdown at the top of the list <code>Download the dataset of the selected entries</code> to download the json file.</li>
+    </ol>
+</p>
+
+{% else %}
+
+<h2>Please sign in to continue.</h2>
+
+{% endif %}
+{% endblock content %}
