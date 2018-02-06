@@ -99,19 +99,17 @@ class Image(models.Model):
 
     def to_dict(self):
         return {
-            self.contrast: {
-                'path': os.path.dirname(self.filename),
-                'file': os.path.basename(self.filename),
-                'contrast': self.contrast_category,
-                'coverage': f'{self.start_coverage}:{self.end_coverage}',
-                'orientation': self.orientation,
-                'resolution': self.resolution,
-                'labeling': [x.to_dict() for x in self.labeled_images.all()],
-                'study': {
-                    'pam50': int(self.pam50),
-                    'ms_mapping': int(self.ms_mapping),
-                    'gm_model': int(self.gm_model)
-                }
+            'path': os.path.dirname(self.filename),
+            'file': os.path.basename(self.filename),
+            'contrast': self.contrast_category,
+            'coverage': f'{self.start_coverage}:{self.end_coverage}',
+            'orientation': self.orientation,
+            'resolution': self.resolution,
+            'labeling': [x.to_dict() for x in self.labeled_images.all()],
+            'study': {
+                'pam50': int(self.pam50),
+                'ms_mapping': int(self.ms_mapping),
+                'gm_model': int(self.gm_model)
             }
         }
 
