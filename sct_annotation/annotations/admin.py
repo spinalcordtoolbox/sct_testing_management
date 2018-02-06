@@ -61,7 +61,7 @@ class AcquisitionAdmin(admin.ModelAdmin):
         'images__ms_mapping',
         'images__gm_model',
         'images__pam50')
-    search_fields = ('center', 'study')
+    search_fields = ('center', 'study', 'subject')
     list_select_related = ('demographic',)
     inlines = [
         DemographicInline,
