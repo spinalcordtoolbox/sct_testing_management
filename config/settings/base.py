@@ -111,7 +111,7 @@ MANAGERS = ADMINS
 # Uses django-environ to accept uri format
 # See: https://django-environ.readthedocs.io/en/latest/#supported-types
 DATABASES = {
-    'default': {'ENGINE': 'django.db.backends.sqlite3', 'NAME': 'sct_annotation.db'},
+    'default': env.db('DATABASE_URL', default='postgres:///sct_annotation'),
 }
 DATABASES['default']['ATOMIC_REQUESTS'] = True
 
