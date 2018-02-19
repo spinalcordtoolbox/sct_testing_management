@@ -81,7 +81,7 @@ class Image(models.Model):
     acquisition = models.ForeignKey(Acquisition,
                                     on_delete=models.CASCADE,
                                     related_name='images')
-    contrast = models.CharField('Contrast details', max_length=16)
+    contrast = models.CharField('Contrast details', max_length=32)
     contrast_category = models.CharField(max_length=16)
     filename = models.CharField(max_length=512)
     start_coverage = models.CharField(max_length=16, null=True, blank=True)
