@@ -23,4 +23,6 @@ class ImageFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Image
 
-    contrast = fuzzy.FuzzyChoice(['t1', 't2', 't2s'])
+    contrast_category = fuzzy.FuzzyChoice(['t1', 't2', 't2s'])
+    pam50 = fuzzy.FuzzyChoice([True, False])
+    ms_mapping = fuzzy.FuzzyChoice([False, True])

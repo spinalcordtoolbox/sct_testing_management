@@ -53,9 +53,6 @@ class Acquisition(models.Model):
             self.dataset_file = False
         super().save(*args, **kwargs)
 
-    def get_absolute_url(self):
-        return reverse('acqusition-detail', kwargs={'pk': self.pk})
-
 
 class Demographic(models.Model):
     GENDER = (('M', 'Male'), ('F', 'Female'))
@@ -113,9 +110,6 @@ class Image(models.Model):
             }
         }
 
-    def get_absolute_url(self):
-        return reverse('image-detail', kwargs={'pk': self.pk})
-
 
 class LabeledImage(models.Model):
     CORD = ('seg_manual', 'Binary mask of spinal cord')
@@ -135,6 +129,3 @@ class LabeledImage(models.Model):
 
     def to_dict(self):
         return {'label': self.label, 'file': self.filename, 'rater': self.author}
-
-    def get_absolute_url(self):
-        return reverse('labeled-detail', kwargs={'pk': self.pk})
