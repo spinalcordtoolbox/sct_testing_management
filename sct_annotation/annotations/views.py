@@ -16,7 +16,6 @@ def _get_datasets(request):
     params['demographic__pathology'] = request.GET.get('pathology')
     params = {key: value for key, value in params.items() if value}
     if params:
-        import ipdb; ipdb.set_trace()
         queryset = queryset.filter(**params).distinct()
     ser = AcquisitionSerializer(queryset, many=True)
     return Response(ser.data)
