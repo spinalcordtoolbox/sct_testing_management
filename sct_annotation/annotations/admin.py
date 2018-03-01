@@ -1,3 +1,4 @@
+from django import forms
 from django.contrib import admin
 from django.core.urlresolvers import reverse
 from django.http import JsonResponse
@@ -5,20 +6,6 @@ from django.utils.safestring import mark_safe
 from django.utils.text import force_text
 
 from . import models
-
-
-class MissingDatasetFilter(admin.SimpleListFilter):
-    title = 'Dataset with missing details'
-    parameter_name = 'dataset_details'
-
-    def lookups(self, request, model_admin):
-        return (('missing', 'Missing Dataset'),
-                ('populated', 'Populated Dataset'))
-
-    def queryset(self, request, queryset):
-        if self.value() == 'missing':
-            return queryset.filter(dataset_file=False)
-        return queryset.filter(dataset_file=True)
 
 
 class ImageInline(admin.StackedInline):
@@ -52,6 +39,35 @@ class LabeledImageAdmin(admin.StackedInline):
     extra = 0
 
 
+class DataListWidget(forms.TextInput):
+    def __init__(self, name, data_list, *args, **kwargs):
+        super(DataListWidget, self).__init__(*args, **kwargs)
+        self._name = name
+        self._data_list = data_list
+        self.attrs.update({'list': f'list__{self._name}'})
+
+    def render(self, name, value, attrs=None):
+        text_html = super(DataListWidget, self).render(name, value, attrs=attrs)
+        data_list = f'<datalist id="list__{self._name}">'
+        for item in self._data_list:
+            data_list += f'<option value="{item}">'
+        data_list += '</datalist>'
+        return text_html + data_list
+
+
+class AcquisitionForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(AcquisitionForm, self).__init__(*args, **kwargs)
+        scanners = models.Acquisition.objects.order_by('scanner').values_list('scanner', flat=True).distinct()
+        centers = models.Acquisition.objects.order_by('center').values_list('center', flat=True).distinct()
+        self.fields['scanner'].widget = DataListWidget('scanner', scanners)
+        self.fields['center'].widget = DataListWidget('center', centers)
+
+    class Meta:
+        model = models.Acquisition
+        fields = '__all__'
+
+
 @admin.register(models.Acquisition)
 class AcquisitionAdmin(admin.ModelAdmin):
     list_display = ('center', 'study', 'subject')
@@ -71,6 +87,7 @@ class AcquisitionAdmin(admin.ModelAdmin):
         'publish_dataset',
     ]
     save_on_top = True
+    form = AcquisitionForm
 
     def publish_dataset(self, request, queryset):
         return JsonResponse([x.to_dict() for x in queryset], safe=False)
