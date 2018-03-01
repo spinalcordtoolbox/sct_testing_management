@@ -18,8 +18,6 @@ class Acquisition(models.Model):
     scanner = models.CharField(max_length=32, null=True, blank=True)
     study = models.CharField(max_length=64, null=True, blank=True)
     subject = models.CharField(max_length=64, null=True, blank=True)
-    dataset_file = models.BooleanField('Dataset description exists',
-                                       default=False)
 
     def __str__(self):
         return f'{self.center}_{self.study}_{self.subject}'
@@ -41,17 +39,6 @@ class Acquisition(models.Model):
                                                           'researcher')},
             'images': {x.contrast: x.to_dict() for x in self.images.all()}
         }
-
-    def save(self, *args, **kwargs):
-        """Check if the dataset file exists and update the field"""
-        dataset = os.path.join(settings.SCT_DATASET_ROOT,
-                               str(self),
-                               'dataset_description.json')
-        if os.path.isfile(dataset):
-            self.dataset_file = True
-        else:
-            self.dataset_file = False
-        super().save(*args, **kwargs)
 
 
 class Demographic(models.Model):
