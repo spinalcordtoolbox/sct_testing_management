@@ -11,7 +11,7 @@ from . import models
 class ImageInline(admin.StackedInline):
     model = models.Image
     extra = 0
-    fields = ('contrast_category', 'contrast',
+    fields = ('contrast_category',
               ('pam50', 'ms_mapping', 'gm_model'),
               'filename',
               'get_edit_link')
@@ -96,7 +96,7 @@ class AcquisitionAdmin(admin.ModelAdmin):
 
 @admin.register(models.Image)
 class ImageAdmin(admin.ModelAdmin):
-    list_display = ('acquisition', 'contrast_category', 'contrast', 'filename')
+    list_display = ('acquisition', 'contrast_category', 'filename')
     fields = (
         'acquisition',
         ('contrast_category', 'filename'),

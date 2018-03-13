@@ -37,7 +37,7 @@ class Acquisition(models.Model):
                                                           'date_of_birth',
                                                           'pathology',
                                                           'researcher')},
-            'images': {x.contrast: x.to_dict() for x in self.images.all()}
+            'images': {x.contrast_category: x.to_dict() for x in self.images.all()}
         }
 
 
@@ -79,7 +79,7 @@ class Image(models.Model):
     gm_model = models.BooleanField(default=False)
 
     def __str__(self):
-        return f'{self.contrast} {self.acquisition}'
+        return f'{self.contrast_category} {self.acquisition}'
 
     def to_dict(self):
         return {
