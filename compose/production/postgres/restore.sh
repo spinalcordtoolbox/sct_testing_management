@@ -56,6 +56,6 @@ createdb -h postgres -U $POSTGRES_USER $POSTGRES_USER -O $POSTGRES_USER
 
 # restore the database
 echo "restoring database $POSTGRES_USER"
-echo $POSTGRES_PASSWORD | gpg --passphrase-fd 0 -d $BACKUPFILE -o $SQLFILE
-gunzip -c $SQLFILE | psql -h postgres -U $POSTGRES_USER
-rm $SQLFILE
+# echo $POSTGRES_PASSWORD | gpg --passphrase-fd 0 -d $BACKUPFILE -o $SQLFILE
+gunzip -c $BACKUPFILE | psql -h postgres -U $POSTGRES_USER
+# rm $SQLFILE
