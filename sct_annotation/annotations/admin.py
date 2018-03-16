@@ -11,7 +11,7 @@ from . import models
 class ImageInline(admin.StackedInline):
     model = models.Image
     extra = 0
-    fields = ('contrast_category',
+    fields = ('contrast',
               ('pam50', 'ms_mapping', 'gm_model'),
               'filename',
               'get_edit_link')
@@ -70,14 +70,14 @@ class AcquisitionForm(forms.ModelForm):
 
 @admin.register(models.Acquisition)
 class AcquisitionAdmin(admin.ModelAdmin):
-    list_display = ('center', 'study', 'subject')
+    list_display = ('center', 'study', 'session')
     list_filter = (
         'demographic__pathology',
-        'images__contrast_category',
+        'images__contrast',
         'images__ms_mapping',
         'images__gm_model',
         'images__pam50')
-    search_fields = ('center', 'study', 'subject')
+    search_fields = ('center', 'study', 'session')
     list_select_related = ('demographic',)
     inlines = [
         DemographicInline,
@@ -96,15 +96,15 @@ class AcquisitionAdmin(admin.ModelAdmin):
 
 @admin.register(models.Image)
 class ImageAdmin(admin.ModelAdmin):
-    list_display = ('acquisition', 'contrast_category', 'filename')
+    list_display = ('acquisition', 'contrast', 'filename')
     fields = (
         'acquisition',
-        ('contrast_category', 'filename'),
+        ('contrast', 'filename'),
         ('start_coverage', 'end_coverage'),
         ('orientation', 'resolution'),
         ('pam50', 'ms_mapping', 'gm_model')
     )
-    list_filter = ('contrast_category', 'pam50', 'ms_mapping', 'gm_model')
+    list_filter = ('contrast', 'pam50', 'ms_mapping', 'gm_model')
     inlines = [
         LabeledImageAdmin
     ]

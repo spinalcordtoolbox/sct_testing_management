@@ -17,10 +17,10 @@ class Acquisition(models.Model):
     center = models.CharField(max_length=32, null=True, blank=True)
     scanner = models.CharField(max_length=32, null=True, blank=True)
     study = models.CharField(max_length=64, null=True, blank=True)
-    subject = models.CharField(max_length=64, null=True, blank=True)
+    session = models.CharField(max_length=64, null=True, blank=True)
 
     def __str__(self):
-        return f'{self.center}_{self.study}_{self.subject}'
+        return f'{self.center} {self.study} {self.session}'
 
     def to_dict(self):
         return {
@@ -29,7 +29,7 @@ class Acquisition(models.Model):
                                               'scanner',
                                               'center',
                                               'study',
-                                              'subject')},
+                                              'session')},
             'demographic': {
                 x: getattr(self.demographic, x) for x in ('surname',
                                                           'family_name',
@@ -65,8 +65,7 @@ class Image(models.Model):
     acquisition = models.ForeignKey(Acquisition,
                                     on_delete=models.CASCADE,
                                     related_name='images')
-    contrast = models.CharField('Contrast details', max_length=32)
-    contrast_category = models.CharField(max_length=32)
+    contrast = models.CharField(max_length=32)
     filename = models.CharField(max_length=512)
     start_coverage = models.CharField(max_length=16, null=True, blank=True)
     end_coverage = models.CharField(max_length=16, null=True, blank=True)
@@ -79,13 +78,13 @@ class Image(models.Model):
     gm_model = models.BooleanField(default=False)
 
     def __str__(self):
-        return f'{self.contrast_category} {self.acquisition}'
+        return f'{self.contrast} {self.acquisition}'
 
     def to_dict(self):
         return {
             'path': os.path.dirname(self.filename),
             'file': os.path.basename(self.filename),
-            'contrast': self.contrast_category,
+            'contrast': self.contrast,
             'coverage': f'{self.start_coverage}:{self.end_coverage}',
             'orientation': self.orientation,
             'resolution': self.resolution,
