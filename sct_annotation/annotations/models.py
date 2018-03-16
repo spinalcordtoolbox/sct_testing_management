@@ -66,7 +66,7 @@ class Image(models.Model):
                                     on_delete=models.CASCADE,
                                     related_name='images')
     contrast = models.CharField(max_length=32)
-    filename = models.CharField(max_length=512)
+    filename = models.CharField('Relative file name: (/Volumes/sct_testing/large/)', max_length=512)
     start_coverage = models.CharField(max_length=16, null=True, blank=True)
     end_coverage = models.CharField(max_length=16, null=True, blank=True)
     orientation = models.CharField(max_length=16, null=True, blank=True)
@@ -107,7 +107,7 @@ class LabeledImage(models.Model):
                                  on_delete=models.CASCADE,
                                  related_name='labeled_images')
     label = models.CharField(max_length=16, choices=LABELS)
-    filename = models.CharField(max_length=512)
+    filename = models.CharField('Relative file name: (/Volumes/sct_testing/large/)', max_length=512)
     author = models.CharField(max_length=64, null=True, blank=True)
 
     def __str__(self):
