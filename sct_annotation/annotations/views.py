@@ -33,6 +33,8 @@ def _post_datasets(request):
 def datasets(request):
     if request.method == 'GET':
         return _get_datasets(request)
+
     elif request.method == 'POST':
         return _post_datasets(request)
+
     return Response(status=status.HTTP_400_BAD_REQUEST)

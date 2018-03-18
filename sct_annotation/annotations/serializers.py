@@ -5,6 +5,7 @@ from . import models
 
 
 class ImageSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = models.Image
         fields = '__all__'
@@ -12,6 +13,7 @@ class ImageSerializer(serializers.ModelSerializer):
 
 
 class DemographicSerialer(serializers.ModelSerializer):
+
     class Meta:
         model = models.Demographic
         fields = '__all__'

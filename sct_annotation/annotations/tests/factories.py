@@ -6,6 +6,7 @@ from ..models import Acquisition, Demographic, Image
 
 
 class AcquisitionFactory(factory.django.DjangoModelFactory):
+
     class Meta:
         model = Acquisition
 
@@ -15,11 +16,13 @@ class AcquisitionFactory(factory.django.DjangoModelFactory):
 
 
 class DemographicFactory(factory.django.DjangoModelFactory):
+
     class Meta:
         model = Demographic
 
 
 class ImageFactory(factory.django.DjangoModelFactory):
+
     class Meta:
         model = Image
 

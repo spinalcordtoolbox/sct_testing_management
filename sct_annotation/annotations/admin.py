@@ -11,20 +11,23 @@ from . import models
 class ImageInline(admin.StackedInline):
     model = models.Image
     extra = 0
-    fields = ('contrast',
-              ('pam50', 'ms_mapping', 'gm_model'),
-              'filename',
-              'get_edit_link')
-    readonly_fields = ('get_edit_link', )
+    fields = (
+        'contrast', ('pam50', 'ms_mapping', 'gm_model'), 'filename', 'get_edit_link'
+    )
+    readonly_fields = ('get_edit_link',)
     verbose_name = 'Nifti Contrast'
     verbose_name_plural = 'List of Nifti contrast'
 
     def get_edit_link(self, obj):
         if obj.pk:
-            url = reverse(f'admin:{obj._meta.app_label}_{obj._meta.model_name}_change',
-                          args=[force_text(obj.pk)])
+            url = reverse(
+                f'admin:{obj._meta.app_label}_{obj._meta.model_name}_change',
+                args=[force_text(obj.pk)],
+            )
             return mark_safe(f'<a href="{url}">Edit {obj._meta.verbose_name}</a>')
+
         return mark_safe('Save and Continue editing to create a link')
+
     get_edit_link.short_description = "Edit Image"
     get_edit_link.allow_tags = True
 
@@ -40,6 +43,7 @@ class LabeledImageAdmin(admin.StackedInline):
 
 
 class DataListWidget(forms.TextInput):
+
     def __init__(self, name, data_list, *args, **kwargs):
         super(DataListWidget, self).__init__(*args, **kwargs)
         self._name = name
@@ -56,10 +60,15 @@ class DataListWidget(forms.TextInput):
 
 
 class AcquisitionForm(forms.ModelForm):
+
     def __init__(self, *args, **kwargs):
         super(AcquisitionForm, self).__init__(*args, **kwargs)
-        scanners = models.Acquisition.objects.order_by('scanner').values_list('scanner', flat=True).distinct()
-        centers = models.Acquisition.objects.order_by('center').values_list('center', flat=True).distinct()
+        scanners = models.Acquisition.objects.order_by('scanner').values_list(
+            'scanner', flat=True
+        ).distinct()
+        centers = models.Acquisition.objects.order_by('center').values_list(
+            'center', flat=True
+        ).distinct()
         self.fields['scanner'].widget = DataListWidget('scanner', scanners)
         self.fields['center'].widget = DataListWidget('center', centers)
 
@@ -76,21 +85,18 @@ class AcquisitionAdmin(admin.ModelAdmin):
         'images__contrast',
         'images__ms_mapping',
         'images__gm_model',
-        'images__pam50')
+        'images__pam50',
+    )
     search_fields = ('center', 'study', 'session')
     list_select_related = ('demographic',)
-    inlines = [
-        DemographicInline,
-        ImageInline
-    ]
-    actions = [
-        'publish_dataset',
-    ]
+    inlines = [DemographicInline, ImageInline]
+    actions = ['publish_dataset']
     save_on_top = True
     form = AcquisitionForm
 
     def publish_dataset(self, request, queryset):
         return JsonResponse([x.to_dict() for x in queryset], safe=False)
+
     publish_dataset.short_description = 'Download the dataset of the selected entries'
 
 
@@ -102,9 +108,7 @@ class ImageAdmin(admin.ModelAdmin):
         ('contrast', 'filename'),
         ('start_coverage', 'end_coverage'),
         ('orientation', 'resolution'),
-        ('pam50', 'ms_mapping', 'gm_model')
+        ('pam50', 'ms_mapping', 'gm_model'),
     )
     list_filter = ('contrast', 'pam50', 'ms_mapping', 'gm_model')
-    inlines = [
-        LabeledImageAdmin
-    ]
+    inlines = [LabeledImageAdmin]
