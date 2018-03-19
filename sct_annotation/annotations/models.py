@@ -75,9 +75,12 @@ class Image(models.Model):
     orientation = models.CharField(max_length=16, null=True, blank=True)
     resolution = models.CharField(max_length=16, null=True, blank=True)
     # study
-    pam50 = models.BooleanField(default=False)
-    ms_mapping = models.BooleanField(default=False)
-    gm_model = models.BooleanField(default=False)
+    pam50 = models.BooleanField(default=False,
+                                help_text='Is image used in the generation of PAM50')
+    ms_mapping = models.BooleanField(default=False,
+                                     help_text='Is image used in mapping MS')
+    gm_model = models.BooleanField(default=False,
+                                   help_text='Is image used to model gray matter')
 
     def __str__(self):
         return f'{self.contrast} {self.acquisition}'
@@ -110,7 +113,9 @@ class LabeledImage(models.Model):
     contrast = models.ForeignKey(
         Image, on_delete=models.CASCADE, related_name='labeled_images'
     )
-    label = models.CharField(max_length=16, choices=LABELS)
+    label = models.CharField(max_length=16,
+                             choices=LABELS,
+                             help_text='What type of labeled image')
     filename = models.CharField(
         'Relative file name: (/Volumes/sct_testing/large/)', max_length=512
     )
