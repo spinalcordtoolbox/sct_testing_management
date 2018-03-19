@@ -1,15 +1,5 @@
-import os
-
 from django.conf import settings
 from django.db import models
-
-
-def validate_nifti(value):
-    return os.path.isfile(value) and str(value).endswith('nii.gz')
-
-
-def validate_path(value):
-    return os.path.isdir(value)
 
 
 class Acquisition(models.Model):
@@ -83,7 +73,7 @@ class Image(models.Model):
                                    help_text='Is image used to model gray matter')
 
     def __str__(self):
-        return f'{self.contrast} {self.acquisition}'
+        return f'{self.contrast} -- {self.acquisition}'
 
     def to_dict(self):
         return {
@@ -122,7 +112,7 @@ class LabeledImage(models.Model):
     author = models.CharField(max_length=64, null=True, blank=True)
 
     def __str__(self):
-        return f'{self.contrast}: {self.label} {self.filename} ({self.author})'
+        return f'{self.label} -- {self.contrast}'
 
     def to_dict(self):
         return {'label': self.label, 'file': self.filename, 'rater': self.author}

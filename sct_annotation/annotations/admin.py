@@ -77,6 +77,20 @@ class AcquisitionForm(forms.ModelForm):
         fields = '__all__'
 
 
+class ImageForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(ImageForm, self).__init__(*args, **kwargs)
+        contrast = models.Image.objects.order_by('contrast').values_list(
+            'contrast', flat=True
+        ).distinct()
+        self.fields['contrast'].widget = DataListWidget('contrast', contrast)
+
+    class Meta:
+        model = models.Image
+        fields = '__all__'
+
+
 @admin.register(models.Acquisition)
 class AcquisitionAdmin(admin.ModelAdmin):
     list_display = ('center', 'study', 'session')
@@ -114,3 +128,5 @@ class ImageAdmin(admin.ModelAdmin):
         ('pam50', 'ms_mapping', 'gm_model'),
     )
     inlines = [LabeledImageAdmin]
+    save_on_top = True
+    form = ImageForm
