@@ -14,7 +14,7 @@ def _get_datasets(request):
     params['images__pam50'] = request.GET.get('pam50')
     params['images__ms_mapping'] = request.GET.get('ms_mapping')
     params['images__gm_model'] = request.GET.get('gm_model')
-    params['images__contrast_category'] = request.GET.get('contrast')
+    params['images__contrast'] = request.GET.get('contrast')
     params['demographic__pathology'] = request.GET.get('pathology')
     params = {key: value for key, value in params.items() if value}
     if params:

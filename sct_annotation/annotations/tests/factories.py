@@ -3,16 +3,17 @@ import factory
 import factory.fuzzy as fuzzy
 
 from ..models import Acquisition, Demographic, Image
+from sct_annotation.users.models import User
 
 
 class AcquisitionFactory(factory.django.DjangoModelFactory):
 
+    center = factory.Sequence(lambda n: 'center%03d' % n)
+    study = factory.Sequence(lambda n: 'study%03d' % n)
+    session = factory.Sequence(lambda n: 'session%03d' % n)
+
     class Meta:
         model = Acquisition
-
-    center = factory.Sequence(lambda n: 'center-{}'.format(n))
-    study = factory.Sequence(lambda n: 'study-{}'.format(n))
-    subject = factory.Sequence(lambda n: 'subject-{}'.format(n))
 
 
 class DemographicFactory(factory.django.DjangoModelFactory):
@@ -23,9 +24,15 @@ class DemographicFactory(factory.django.DjangoModelFactory):
 
 class ImageFactory(factory.django.DjangoModelFactory):
 
+    contrast = fuzzy.FuzzyChoice(['t1', 't2', 't2s'])
+    pam50 = fuzzy.FuzzyChoice([True, False])
+    ms_mapping = fuzzy.FuzzyChoice([False, True])
+
     class Meta:
         model = Image
 
-    contrast_category = fuzzy.FuzzyChoice(['t1', 't2', 't2s'])
-    pam50 = fuzzy.FuzzyChoice([True, False])
-    ms_mapping = fuzzy.FuzzyChoice([False, True])
+
+class UserFactory(factory.django.DjangoModelFactory):
+
+    class Meta:
+        model = User

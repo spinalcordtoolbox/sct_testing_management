@@ -29,7 +29,7 @@ class Acquisition(models.Model):
                     'researcher',
                 )
             },
-            'images': {x.contrast_category: x.to_dict() for x in self.images.all()},
+            'images': {x.contrast: x.to_dict() for x in self.images.all()},
         }
 
 
