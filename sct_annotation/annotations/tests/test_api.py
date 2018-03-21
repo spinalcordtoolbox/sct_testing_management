@@ -3,6 +3,7 @@ from rest_framework.test import APIClient
 
 from test_plus.test import TestCase
 
+from .. import serializers
 from .. import views
 from . import factories
 
@@ -58,3 +59,32 @@ class TestDatasetApi(TestCase):
         )
         assert response.status_code == 200
         self.assertEqual(len(response.data), 1)
+
+    def test_empty_serializer(self):
+        data = {'demographic': {}, 'images': []}
+        ser = serializers.AcquisitionSerializer(data=data)
+        assert not ser.is_valid()
+
+    def test_minimal_serializer(self):
+        data = {
+            'center': 'c1',
+            'scanner': 's1',
+            'session': 'ses1',
+            'demographic': {
+                'pathology': 'normal'
+            },
+            'images': [
+                {
+                    'contrast': 't2',
+                    'filename': '/valid/path/to/t2.nii.gz'
+                }
+            ]
+        }
+        ser = serializers.AcquisitionSerializer(data=data)
+        assert ser.is_valid()
+
+    def test_post_new_dataset(self):
+        self.client.login(username='test-admin', password='secret')
+        data = {'demographic': {}, 'images': {}}
+        response = self.client.post(reverse('annotations:api-datasets'), data, format='json')
+        assert response.status_code == 200

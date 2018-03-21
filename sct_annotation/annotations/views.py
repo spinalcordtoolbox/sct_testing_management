@@ -25,6 +25,10 @@ def _get_datasets(request):
 
 
 def _post_datasets(request):
+    dataset = AcquisitionSerializer(data=request.data)
+    if dataset.is_valid():
+        dataset.save()
+        return Response(dataset.data, status=status.HTTP_201_CREATED)
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
 

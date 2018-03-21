@@ -4,12 +4,19 @@ from rest_framework import serializers
 from . import models
 
 
+class LabeledImageSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.LabeledImage
+        fields = '__all__'
+
+
 class ImageSerializer(serializers.ModelSerializer):
+    labeled_images = LabeledImageSerializer(many=True, read_only=True)
 
     class Meta:
         model = models.Image
         fields = '__all__'
-        depth = 1
 
 
 class DemographicSerialer(serializers.ModelSerializer):
@@ -17,26 +24,12 @@ class DemographicSerialer(serializers.ModelSerializer):
     class Meta:
         model = models.Demographic
         fields = '__all__'
-        depth = 1
 
 
 class AcquisitionSerializer(serializers.ModelSerializer):
     images = ImageSerializer(many=True, read_only=True)
-    demographic = DemographicSerialer(many=False)
+    demographic = DemographicSerialer(many=False, read_only=True)
 
     class Meta:
         model = models.Acquisition
         fields = '__all__'
-        depth = 1
-
-
-class DatasetSerializer(serializers.Serializer):
-    count = serializers.SerializerMethodField()
-    date = serializers.SerializerMethodField()
-    data = AcquisitionSerializer
-
-    def get_count(self, obj):
-        return self.instance.count()
-
-    def get_date(self, obj):
-        return now()
