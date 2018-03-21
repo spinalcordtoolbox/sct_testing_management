@@ -40,13 +40,15 @@ class DemographicInline(admin.StackedInline):
 
 class LabeledImageAdmin(admin.StackedInline):
     model = models.LabeledImage
+    fields = ('label', 'filename', 'filestate', 'author')
+    readonly_fields = ('filestate',)
     extra = 0
 
 
 class DataListWidget(forms.TextInput):
 
     def __init__(self, name, data_list, *args, **kwargs):
-        super(DataListWidget, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self._name = name
         self._data_list = data_list
         self.attrs.update({'list': f'list__{self._name}'})
@@ -63,7 +65,7 @@ class DataListWidget(forms.TextInput):
 class AcquisitionForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
-        super(AcquisitionForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         scanners = models.Acquisition.objects.order_by('scanner').values_list(
             'scanner', flat=True
         ).distinct()
@@ -81,7 +83,7 @@ class AcquisitionForm(forms.ModelForm):
 class ImageForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
-        super(ImageForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         contrast = models.Image.objects.order_by('contrast').values_list(
             'contrast', flat=True
         ).distinct()
@@ -124,11 +126,12 @@ class ImageAdmin(admin.ModelAdmin):
     search_fields = ('acquisition__center', 'acquisition__study', 'acquisition__session')
     fields = (
         'acquisition',
-        ('contrast', 'filename'),
+        ('contrast', 'filename', 'filestate'),
         ('start_coverage', 'end_coverage'),
         ('orientation', 'resolution'),
         ('pam50', 'ms_mapping', 'gm_model'),
     )
+    readonly_fields = ('filestate', )
     inlines = [LabeledImageAdmin]
     save_on_top = True
     form = ImageForm

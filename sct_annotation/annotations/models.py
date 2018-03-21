@@ -1,5 +1,49 @@
+from pathlib import Path
+
 from django.conf import settings
 from django.db import models
+import nibabel as nib
+
+class FileNameMixin(models.Model):
+    OK_FILE = ('OK', 'File is available')
+    NO_FILE = ('NA', 'File not available')
+    ERR_FILE = ('ERR','File error')
+    FILESTATE = (OK_FILE, NO_FILE, ERR_FILE)
+
+    filename = models.CharField(
+        'File path: (%s)' % settings.SCT_DATASET_ROOT,
+        max_length=512
+    )
+    filestate = models.CharField(
+        'The state of the file',
+        max_length=3,
+        default='OK',
+        choices=FILESTATE
+    )
+
+    def validate_filename(self):
+        path = str(Path(settings.SCT_DATASET_ROOT) / self.filename)
+
+        try:
+            img = nib.load(path)
+            self.filestate = self.OK_FILE
+        except FileNotFoundError as err:
+            self.filestate = self.NO_FILE
+            self.error_msg = str(err)
+            return False
+        except nib.filebasedimages.ImageFileError as err:
+            self.filestate = self.ERR_FILE
+            self.error_msg = str(err)
+            return False
+
+        return True
+
+    def save(self, *args, **kwargs):
+        self.validate_filename()
+        super().save(*args, **kwargs)
+
+    class Meta:
+        abstract = True
 
 
 class Acquisition(models.Model):
@@ -11,26 +55,6 @@ class Acquisition(models.Model):
 
     def __str__(self):
         return f'{self.center} {self.study} {self.session}'
-
-    def to_dict(self):
-        return {
-            'acquisition': {
-                x: getattr(self, x)
-                for x in ('date_of_scan', 'scanner', 'center', 'study', 'session')
-            },
-            'demographic': {
-                x: getattr(self.demographic, x)
-                for x in (
-                    'surname',
-                    'family_name',
-                    'gender',
-                    'date_of_birth',
-                    'pathology',
-                    'researcher',
-                )
-            },
-            'images': {x.contrast: x.to_dict() for x in self.images.all()},
-        }
 
 
 class Demographic(models.Model):
@@ -48,18 +72,12 @@ class Demographic(models.Model):
     def __str__(self):
         return f'{self.surname} {self.family_name} {self.gender} {self.pathology}'
 
-    def to_dict(self):
-        return self.acquisition.to_dict()
 
-
-class Image(models.Model):
+class Image(FileNameMixin):
     acquisition = models.ForeignKey(
         Acquisition, on_delete=models.CASCADE, related_name='images'
     )
     contrast = models.CharField(max_length=32)
-    filename = models.CharField(
-        'Relative file name: (/Volumes/sct_testing/large/)', max_length=512
-    )
     start_coverage = models.CharField(max_length=16, null=True, blank=True)
     end_coverage = models.CharField(max_length=16, null=True, blank=True)
     orientation = models.CharField(max_length=16, null=True, blank=True)
@@ -75,24 +93,8 @@ class Image(models.Model):
     def __str__(self):
         return f'{self.contrast} -- {self.acquisition}'
 
-    def to_dict(self):
-        return {
-            'path': os.path.dirname(self.filename),
-            'file': os.path.basename(self.filename),
-            'contrast': self.contrast,
-            'coverage': f'{self.start_coverage}:{self.end_coverage}',
-            'orientation': self.orientation,
-            'resolution': self.resolution,
-            'labeling': [x.to_dict() for x in self.labeled_images.all()],
-            'study': {
-                'pam50': int(self.pam50),
-                'ms_mapping': int(self.ms_mapping),
-                'gm_model': int(self.gm_model),
-            },
-        }
 
-
-class LabeledImage(models.Model):
+class LabeledImage(FileNameMixin):
     CORD = ('seg_manual', 'Binary mask of spinal cord')
     GM = ('gmseg_manual', 'Binary mask of gray matter')
     LESION = ('lesion_manual', 'Binary mask of lesions')
@@ -106,13 +108,7 @@ class LabeledImage(models.Model):
     label = models.CharField(max_length=16,
                              choices=LABELS,
                              help_text='What type of labeled image')
-    filename = models.CharField(
-        'Relative file name: (/Volumes/sct_testing/large/)', max_length=512
-    )
     author = models.CharField(max_length=64, null=True, blank=True)
 
     def __str__(self):
         return f'{self.label} -- {self.contrast}'
-
-    def to_dict(self):
-        return {'label': self.label, 'file': self.filename, 'rater': self.author}

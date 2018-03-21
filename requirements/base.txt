@@ -50,3 +50,4 @@ rcssmin==1.0.6
 django-compressor==2.2
 
 # Your custom requirements go here
+nibabel==2.2.1
