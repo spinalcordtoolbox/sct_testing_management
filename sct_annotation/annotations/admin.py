@@ -6,6 +6,7 @@ from django.utils.safestring import mark_safe
 from django.utils.text import force_text
 
 from . import models
+from .serializers import AcquisitionSerializer
 
 
 class ImageInline(admin.StackedInline):
@@ -109,7 +110,8 @@ class AcquisitionAdmin(admin.ModelAdmin):
     form = AcquisitionForm
 
     def publish_dataset(self, request, queryset):
-        return JsonResponse([x.to_dict() for x in queryset], safe=False)
+        serializer = AcquisitionSerializer(queryset, many=True)
+        return JsonResponse(serializer.data, safe=False)
 
     publish_dataset.short_description = 'Download the dataset of the selected entries'
 
