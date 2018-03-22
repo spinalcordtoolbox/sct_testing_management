@@ -26,13 +26,13 @@ class FileNameMixin(models.Model):
 
         try:
             img = nib.load(path)
-            self.filestate = self.OK_FILE
+            self.filestate = self.OK_FILE[0]
         except FileNotFoundError as err:
-            self.filestate = self.NO_FILE
+            self.filestate = self.NO_FILE[0]
             self.error_msg = str(err)
             return False
         except nib.filebasedimages.ImageFileError as err:
-            self.filestate = self.ERR_FILE
+            self.filestate = self.ERR_FILE[0]
             self.error_msg = str(err)
             return False
 
