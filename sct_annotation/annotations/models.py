@@ -12,7 +12,8 @@ class FileNameMixin(models.Model):
 
     filename = models.CharField(
         'File path: (%s)' % settings.SCT_DATASET_ROOT,
-        max_length=512
+        max_length=512,
+        unique=True
     )
     filestate = models.CharField(
         'The state of the file',
