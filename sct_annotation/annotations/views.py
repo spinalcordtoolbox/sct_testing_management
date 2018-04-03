@@ -1,6 +1,7 @@
 from rest_framework import status
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.generics import ListCreateAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
@@ -43,3 +44,30 @@ def datasets(request):
         return _post_datasets(request)
 
     return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+class Datasets(ListCreateAPIView):
+    queryset = Acquisition.objects.all()
+    serializer_class = AcquisitionSerializer
+    authentication_classes = (SessionAuthentication, BasicAuthentication)
+    permission_classes = (IsAuthenticated,)
+
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        filter_list = (
+            ('pam50', 'images__pam50'),
+            ('ms_mapping', 'images__ms_mapping'),
+            ('gm_model', 'images__gm_model'),
+            ('contrast', 'images__contrast'),
+            ('pathology', 'demographic__pathology'),
+            ('label', 'images__labeled_images__label')
+        )
+        filters = {}
+        for param, filter_ in filter_list:
+            if param in self.request.query_params:
+                filters[filter_] = self.request.query_params[param]
+
+        if filters:
+            return queryset.filter(**filters)
+        return queryset

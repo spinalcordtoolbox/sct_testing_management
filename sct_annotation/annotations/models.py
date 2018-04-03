@@ -48,14 +48,18 @@ class FileNameMixin(models.Model):
 
 
 class Acquisition(models.Model):
+
     date_of_scan = models.DateField(null=True, blank=True)
-    center = models.CharField(max_length=32, null=True, blank=True)
+    center = models.CharField(max_length=32)
     scanner = models.CharField(max_length=32, null=True, blank=True)
-    study = models.CharField(max_length=64, null=True, blank=True)
-    session = models.CharField(max_length=64, null=True, blank=True)
+    study = models.CharField(max_length=64)
+    session = models.CharField(max_length=64)
 
     def __str__(self):
         return f'{self.center} {self.study} {self.session}'
+
+    class Meta:
+        unique_together = (('center', 'study', 'session'))
 
 
 class Demographic(models.Model):
