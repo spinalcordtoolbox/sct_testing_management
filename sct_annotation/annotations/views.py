@@ -16,6 +16,7 @@ def _get_datasets(request):
     params['images__gm_model'] = request.GET.get('gm_model')
     params['images__contrast'] = request.GET.get('contrast')
     params['demographic__pathology'] = request.GET.get('pathology')
+    params['images__labeled_images__label'] = request.GET.get('labeled')
     params = {key: value for key, value in params.items() if value}
     if params:
         queryset = queryset.filter(**params).distinct()
