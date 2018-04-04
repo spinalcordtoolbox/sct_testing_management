@@ -19,7 +19,7 @@ class FileNameMixin(models.Model):
     filestate = models.CharField(
         'The state of the file',
         max_length=3,
-        default='OK',
+        default='NA',
         choices=FILESTATE
     )
 
