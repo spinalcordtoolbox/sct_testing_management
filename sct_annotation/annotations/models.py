@@ -12,9 +12,10 @@ class FileNameMixin(models.Model):
     FILESTATE = (OK_FILE, NO_FILE, ERR_FILE)
 
     filename = models.CharField(
-        'File path: (%s)' % settings.SCT_DATASET_ROOT,
+        'File path',
         max_length=512,
-        unique=True
+        unique=True,
+        help_text=f'path prefix: {settings.SCT_DATASET_ROOT}'
     )
     filestate = models.CharField(
         'The state of the file',
