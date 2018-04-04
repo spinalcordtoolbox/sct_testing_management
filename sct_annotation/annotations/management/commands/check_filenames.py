@@ -1,7 +1,4 @@
-from pathlib import Path
 from django.core.management.base import BaseCommand
-import nibabel as nib
-from nibabel.filebasedimages import ImageFileError
 
 from sct_annotation.annotations.models import Image, LabeledImage
 

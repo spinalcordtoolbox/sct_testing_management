@@ -1,13 +1,14 @@
-from pathlib import Path
-
 from django.conf import settings
 from django.db import models
 import nibabel as nib
+from pathlib import Path
+
 
 class FileNameMixin(models.Model):
+
     OK_FILE = ('OK', 'File is available')
     NO_FILE = ('NA', 'File not available')
-    ERR_FILE = ('ERR','File error')
+    ERR_FILE = ('ERR', 'File error')
     FILESTATE = (OK_FILE, NO_FILE, ERR_FILE)
 
     filename = models.CharField(
@@ -26,7 +27,7 @@ class FileNameMixin(models.Model):
         path = str(Path(settings.SCT_DATASET_ROOT) / self.filename)
 
         try:
-            img = nib.load(path)
+            nib.load(path)
             self.filestate = self.OK_FILE[0]
         except FileNotFoundError as err:
             self.filestate = self.NO_FILE[0]

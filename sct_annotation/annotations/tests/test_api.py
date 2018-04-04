@@ -3,8 +3,6 @@ from rest_framework.test import APIClient
 
 from test_plus.test import TestCase
 
-from .. import serializers
-from .. import views
 from . import factories
 
 
@@ -24,7 +22,6 @@ class TestDatasetApi(TestCase):
         user = factories.UserFactory(username='test-admin')
         user.set_password('secret')
         user.save()
-
 
     def test_refuse_non_authicated_requests(self):
         self.client.logout()
