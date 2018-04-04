@@ -3,12 +3,14 @@ from django.conf.urls import include, url
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.auth.decorators import login_required
-from django.views.generic import TemplateView
+from django.views.generic import RedirectView, TemplateView
 from django.views import defaults as default_views
 
 urlpatterns = [
     url(r'^$',
-        login_required(TemplateView.as_view(template_name='pages/home.html')),
+        login_required(
+            RedirectView.as_view(pattern_name='admin:annotations_acquisition_changelist', permanent=False)
+        ),
         name='home'),
     url(r'^annotations/',
         include('sct_annotation.annotations.urls', namespace='annotations')),
