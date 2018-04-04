@@ -1,7 +1,13 @@
+from pathlib import Path
+
+import logging
+import nibabel as nib
+
 from django.conf import settings
 from django.db import models
-import nibabel as nib
-from pathlib import Path
+
+
+logger = logging.getLogger(__name__)
 
 
 class FileNameMixin(models.Model):
@@ -25,18 +31,22 @@ class FileNameMixin(models.Model):
     )
 
     def validate_filename(self):
+
         path = str(Path(settings.SCT_DATASET_ROOT) / self.filename)
 
         try:
             nib.load(path)
             self.filestate = self.OK_FILE[0]
+            logger.info(f'Path {path} exists')
         except FileNotFoundError as err:
             self.filestate = self.NO_FILE[0]
             self.error_msg = str(err)
+            logger.warning(err)
             return False
-        except nib.filebasedimages.ImageFileError as err:
+        except Exception as err:
             self.filestate = self.ERR_FILE[0]
             self.error_msg = str(err)
+            logger.warning(err)
             return False
 
         return True
