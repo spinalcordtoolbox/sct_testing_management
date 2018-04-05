@@ -4,5 +4,5 @@ from . import views
 
 
 urlpatterns = [
-    url(r'^v1/api/$', views.Datasets.as_view(), name='api-datasets'),
+    url(r'^v1/api/datasets/$', views.Datasets.as_view(), name='api-datasets'),
 ]

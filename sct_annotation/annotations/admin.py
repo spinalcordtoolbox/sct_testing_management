@@ -13,11 +13,11 @@ class ImageInline(admin.StackedInline):
     model = models.Image
     extra = 0
     fields = (
-        'contrast', ('pam50', 'ms_mapping', 'gm_model'), 'filename', 'get_edit_link'
+        ('contrast', 'filename'),
+        ('pam50', 'ms_mapping', 'gm_model'),
+        'get_edit_link'
     )
     readonly_fields = ('get_edit_link',)
-    verbose_name = 'Nifti Contrast'
-    verbose_name_plural = 'List of Nifti contrast'
 
     def get_edit_link(self, obj):
         if obj.pk:
@@ -25,25 +25,19 @@ class ImageInline(admin.StackedInline):
                 f'admin:{obj._meta.app_label}_{obj._meta.model_name}_change',
                 args=[force_text(obj.pk)],
             )
-            return mark_safe(f'<a href="{url}">Edit {obj._meta.verbose_name}</a>')
+            return mark_safe(f'<a href="{url}">Edit {obj.filename}</a>')
 
         return mark_safe('Save and Continue editing to create a link')
 
     get_edit_link.short_description = "Edit Image"
     get_edit_link.allow_tags = True
+    can_delete = False
 
 
 class DemographicInline(admin.StackedInline):
     model = models.Demographic
     extra = 0
-
-
-class LabeledImageAdmin(admin.StackedInline):
-    model = models.LabeledImage
-    fields = ('label', 'filename', 'filestate', 'author')
-    readonly_fields = ('filestate',)
-    extra = 0
-
+    can_delete = False
 
 class DataListWidget(forms.TextInput):
 
@@ -94,8 +88,32 @@ class ImageForm(forms.ModelForm):
         fields = '__all__'
 
 
+class LabeledImageForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        author = models.LabeledImage.objects.order_by('author').values_list(
+            'author', flat=True
+        ).distinct()
+        self.fields['author'].widget = DataListWidget('author', author)
+
+    class Meta:
+        model = models.LabeledImage
+        fields = '__all__'
+
+
+class LabeledImageAdmin(admin.StackedInline):
+    model = models.LabeledImage
+    fields = ('label', 'filename', 'filestate', 'author')
+    readonly_fields = ('filestate',)
+    extra = 0
+    can_delete = False
+    form = LabeledImageForm
+
+
 @admin.register(models.Acquisition)
 class AcquisitionAdmin(admin.ModelAdmin):
+    fields = ('session', ('center', 'study'), ('date_of_scan', 'scanner'))
     list_display = ('center', 'study', 'session')
     list_filter = (
         'demographic__pathology',
@@ -106,7 +124,7 @@ class AcquisitionAdmin(admin.ModelAdmin):
     )
     search_fields = ('center', 'study', 'session')
     list_select_related = ('demographic',)
-    inlines = [DemographicInline, ImageInline]
+    inlines = [ImageInline, DemographicInline]
     actions = ['publish_dataset']
     save_on_top = True
     form = AcquisitionForm
@@ -115,7 +133,7 @@ class AcquisitionAdmin(admin.ModelAdmin):
         serializer = AcquisitionSerializer(queryset, many=True)
         return JsonResponse(serializer.data, safe=False)
 
-    publish_dataset.short_description = 'Download the dataset of the selected entries'
+    publish_dataset.short_description = 'Download the json file of the selected entries'
 
 
 @admin.register(models.Image)
@@ -125,13 +143,22 @@ class ImageAdmin(admin.ModelAdmin):
     list_select_related = ('acquisition',)
     search_fields = ('acquisition__center', 'acquisition__study', 'acquisition__session')
     fields = (
-        'acquisition',
+        ('acquisition', 'goto_acquisition'),
         ('contrast', 'filename', 'filestate'),
         ('start_coverage', 'end_coverage'),
         ('orientation', 'resolution'),
         ('pam50', 'ms_mapping', 'gm_model'),
     )
-    readonly_fields = ('filestate', )
+    readonly_fields = ('filestate', 'goto_acquisition')
     inlines = [LabeledImageAdmin]
     save_on_top = True
     form = ImageForm
+
+    def goto_acquisition(self, obj):
+        if obj.acquisition:
+            url = reverse(f'admin:annotations_acquisition_change', args=[force_text(obj.acquisition.pk)])
+            return mark_safe(f'<a href="{url}">Click here</a>')
+        return ''
+
+    goto_acquisition.short_description = 'Return to Acquisition'
+    goto_acquisition.allow_tags = True
