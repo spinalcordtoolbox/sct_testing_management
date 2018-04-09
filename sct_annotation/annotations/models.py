@@ -35,9 +35,10 @@ class FileNameMixin(models.Model):
         path = str(Path(settings.SCT_DATASET_ROOT) / self.filename)
 
         try:
-            nib.load(path)
+            obj = nib.load(path)
             self.filestate = self.OK_FILE[0]
             logger.info(f'Path {path} exists')
+            return obj
         except FileNotFoundError as err:
             self.filestate = self.NO_FILE[0]
             self.error_msg = str(err)
@@ -48,8 +49,6 @@ class FileNameMixin(models.Model):
             self.error_msg = str(err)
             logger.warning(err)
             return False
-
-        return True
 
     def save(self, *args, **kwargs):
         self.validate_filename()
@@ -98,7 +97,8 @@ class Image(FileNameMixin):
     start_coverage = models.CharField(max_length=16, null=True, blank=True)
     end_coverage = models.CharField(max_length=16, null=True, blank=True)
     orientation = models.CharField(max_length=16, null=True, blank=True)
-    resolution = models.CharField(max_length=16, null=True, blank=True)
+    resolution = models.CharField(max_length=16, null=True, blank=True,
+                                  help_text='The resolution of the nifti file')
     # study
     pam50 = models.BooleanField(default=False,
                                 help_text='Is image used in the generation of PAM50')
@@ -109,6 +109,14 @@ class Image(FileNameMixin):
 
     def __str__(self):
         return f'{self.contrast} -- {self.acquisition}'
+
+    def save(self, *args, **kwargs):
+        img = self.validate_filename()
+        if img:
+            resolution = img.header.get_zooms()
+            self.resolution = 'x'.join(['{0:.2f}'.format(i) for i in resolution])
+
+        super().save(*args, **kwargs)
 
 
 class LabeledImage(FileNameMixin):
