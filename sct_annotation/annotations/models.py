@@ -16,6 +16,10 @@ class FileNameMixin(models.Model):
     NO_FILE = ('NA', 'File not available')
     ERR_FILE = ('ERR', 'File error')
     FILESTATE = (OK_FILE, NO_FILE, ERR_FILE)
+    SAG_CONST = 0
+    COR_CONST = 1
+    AX_CONST = 2
+    img_object = None
 
     filename = models.CharField(
         'File path',
@@ -33,12 +37,14 @@ class FileNameMixin(models.Model):
     def validate_filename(self):
 
         path = str(Path(settings.SCT_DATASET_ROOT) / self.filename)
+        if self.img_object:
+            return self.img_object
 
         try:
-            obj = nib.load(path)
+            self.img_object = nib.load(path)
             self.filestate = self.OK_FILE[0]
             logger.info(f'Path {path} exists')
-            return obj
+            return self.img_object
         except FileNotFoundError as err:
             self.filestate = self.NO_FILE[0]
             self.error_msg = str(err)
@@ -49,6 +55,39 @@ class FileNameMixin(models.Model):
             self.error_msg = str(err)
             logger.warning(err)
             return False
+
+    def calculate_resolution(self):
+        """Calculate the resolution in a string format
+
+        Returns
+        -------
+        str
+            The resolution in the form of `XxYxZ`
+        """
+        img = self.validate_filename()
+        resolution = img.header.get_zooms()
+        return 'x'.join(['{0:.2f}'.format(i) for i in resolution])
+
+
+    def calculate_orientation(self):
+        """Calculate the orientation of the image,
+
+        The values is calculated by taking the z value of the io_orientation of the image
+
+        Returns
+        -------
+        str
+            The string corresponding to the orientation of the image
+        """
+
+        img = self.validate_filename()
+        axis = nib.orientations.io_orientation(img.header.get_best_affine())
+        if axis[2][0] == self.SAG_CONST:
+            return 'sag'
+        if axis[2][0] == self.COR_CONST:
+            return 'cor'
+        if axis[2][0] == self.AX_CONST:
+            return 'ax'
 
     def save(self, *args, **kwargs):
         self.validate_filename()
@@ -113,8 +152,8 @@ class Image(FileNameMixin):
     def save(self, *args, **kwargs):
         img = self.validate_filename()
         if img:
-            resolution = img.header.get_zooms()
-            self.resolution = 'x'.join(['{0:.2f}'.format(i) for i in resolution])
+            self.resolution = self.calculate_resolution()
+            self.orientation = self.calculate_orientation()
 
         super().save(*args, **kwargs)
 
