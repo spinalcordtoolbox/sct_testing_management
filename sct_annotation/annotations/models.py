@@ -16,6 +16,10 @@ class FileNameMixin(models.Model):
     NO_FILE = ('NA', 'File not available')
     ERR_FILE = ('ERR', 'File error')
     FILESTATE = (OK_FILE, NO_FILE, ERR_FILE)
+    SAG_CONST = 0
+    COR_CONST = 1
+    AX_CONST = 2
+    img_object = None
 
     filename = models.CharField(
         'File path',
@@ -33,11 +37,14 @@ class FileNameMixin(models.Model):
     def validate_filename(self):
 
         path = str(Path(settings.SCT_DATASET_ROOT) / self.filename)
+        if self.img_object:
+            return self.img_object
 
         try:
-            nib.load(path)
+            self.img_object = nib.load(path)
             self.filestate = self.OK_FILE[0]
             logger.info(f'Path {path} exists')
+            return self.img_object
         except FileNotFoundError as err:
             self.filestate = self.NO_FILE[0]
             self.error_msg = str(err)
@@ -49,7 +56,38 @@ class FileNameMixin(models.Model):
             logger.warning(err)
             return False
 
-        return True
+    def calculate_resolution(self):
+        """Calculate the resolution in a string format
+
+        Returns
+        -------
+        str
+            The resolution in the form of `XxYxZ`
+        """
+        img = self.validate_filename()
+        resolution = img.header.get_zooms()
+        return 'x'.join(['{0:.2f}'.format(i) for i in resolution])
+
+
+    def calculate_orientation(self):
+        """Calculate the orientation of the image,
+
+        The values is calculated by taking the z value of the io_orientation of the image
+
+        Returns
+        -------
+        str
+            The string corresponding to the orientation of the image
+        """
+
+        img = self.validate_filename()
+        axis = nib.orientations.io_orientation(img.header.get_best_affine())
+        if axis[2][0] == self.SAG_CONST:
+            return 'sag'
+        if axis[2][0] == self.COR_CONST:
+            return 'cor'
+        if axis[2][0] == self.AX_CONST:
+            return 'ax'
 
     def save(self, *args, **kwargs):
         self.validate_filename()
@@ -98,7 +136,8 @@ class Image(FileNameMixin):
     start_coverage = models.CharField(max_length=16, null=True, blank=True)
     end_coverage = models.CharField(max_length=16, null=True, blank=True)
     orientation = models.CharField(max_length=16, null=True, blank=True)
-    resolution = models.CharField(max_length=16, null=True, blank=True)
+    resolution = models.CharField(max_length=16, null=True, blank=True,
+                                  help_text='The resolution of the nifti file')
     # study
     pam50 = models.BooleanField(default=False,
                                 help_text='Is image used in the generation of PAM50')
@@ -109,6 +148,14 @@ class Image(FileNameMixin):
 
     def __str__(self):
         return f'{self.contrast} -- {self.acquisition}'
+
+    def save(self, *args, **kwargs):
+        img = self.validate_filename()
+        if img:
+            self.resolution = self.calculate_resolution()
+            self.orientation = self.calculate_orientation()
+
+        super().save(*args, **kwargs)
 
 
 class LabeledImage(FileNameMixin):
