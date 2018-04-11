@@ -12,13 +12,26 @@ A web application to manage the metadata of MRI images.
 
 Settings
 --------
+Important settings constant to keep track of.
 
-[WIP]
+- `POSTGRES_PASSWORD`: The password the web application logs in with
+- `POSTGRES_USER`: The web application's user name when connecting to the DB
+
+- `DOMAIN_NAME`: The full domain path the web application resides on,
+- `DJANGO_SETTINGS_MODULE`: python path to the settings file. The production
+  settings is "config.settings.production"
+- `DJANGO_ALLOWED_HOSTS`: A list of domain name that the web application will
+  accept connections from
+- `SCT_DATASET_ROOT`: The absolute path to the sct_testing/large dataset.
 
 Basic Commands
 --------------
 
-[WIP]
+Goes through the database and checks if the image filename exists and are valid
+nifti files::
+
+  $ python manage.py check_filenames
+
 
 Setting Up Your Users
 ^^^^^^^^^^^^^^^^^^^^^
@@ -30,7 +43,7 @@ Setting Up Your Users
 
 * To create an **superuser account**, use this command::
 
-    $ python manage.py createsuperuser
+  $ python manage.py createsuperuser
 
 For convenience, you can keep your normal user logged in on Chrome and your
 superuser logged in on Firefox (or similar), so that you can see how the site
@@ -39,21 +52,37 @@ behaves for both kinds of users.
 Setting up the development environment
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-[wip]
+Make sure the environment variables are set. A development web application
+should be launched with sqlite instead of postgres. Here's an example of the
+.env file::
+
+  DJANGO_SETTINGS_MODULE=config.settings.local
+  DJANGO_DEBUG=True
+  DATABASE_URL=sqlite:///sct_annotation.db
+
+The database initialization is needed for the first time::
+
+   $ export DJANGO_READ_DOT_ENV_FILE=1; python manage.py migrate
+
+Once setup is done, you can run an instance of web application, you can run::
+
+   $ export DJANGO_READ_DOT_ENV_FILE=1; python manage.py runserver_plus
+
 
 Running tests
-~~~~~~~~~~~~~
+^^^^^^^^^^^^^
 
-::
+Tests are focused on the API and the ORM testing. All the tests run by running::
 
-  $ py.test
+  $ export DJANGO_READ_DOT_ENV_FILE=1; python manage.py test
 
 
 Deployment
 ----------
 
-The following details how to deploy this application.
-
+The web application can be deployed either natively or within a container. In
+the current production is running in a docker container. It is managed by
+internal ansible scripts.
 
 
 Docker
