@@ -15,7 +15,7 @@ urlpatterns = [
     url(r'^annotations/',
         include('sct_annotation.annotations.urls', namespace='annotations')),
     url(r'^about/$',
-        TemplateView.as_view(template_name='pages/about.html'),
+        TemplateView.as_view(template_name='pages/home.html'),
         name='about'),
 
     # Django Admin, use {% url 'admin:index' %}

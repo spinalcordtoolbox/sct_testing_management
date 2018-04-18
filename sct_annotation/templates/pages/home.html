@@ -44,6 +44,26 @@
     </ol>
 </p>
 
+<h4>3) Use the REST API to build a dataet file.</h4>
+<p>
+    The REST API base url is <code>http://tristano.neuro.polymtl.ca/annotations/v1/api/datasets/</code>. The filters start with <code>?</code> and can chain with <code>&</code>
+    The filters available are:
+    <ol>
+        <li><strong>contrast</strong> The image contrast ('t1', 't2', 't2s', 'fmri', 'dmri')</li>
+        <li><strong>pathology</strong> The pathology name</li>
+        <li><strong>label</strong> The labels available ('seg_manual', 'gmseg_manual', 'lesion_manual', 'labels_disc')</li>
+        <li><strong>ms_mapping</strong>True or False</li>
+        <li><strong>gm_model</strong>True or False</li>
+        <li><strong>pam50</strong>True or False</li>
+        <li><strong>isotropic</strong>True or False</li>
+        <li><strong>sagittal</strong> float or float range ex: 4.0 or 2.0-5.0</li>
+        <li><strong>corrinal</strong> float or float range ex: 4.0 or 2.0-5.0</li>
+        <li><strong>axial</strong> float or float range ex: 4.0 or 2.0-5.0</li>
+    </ol>
+    An example, that will copy the dataset into a file:
+    <code>curl -H "Content-Type: application/json" -u [username]:[password] http://tristano.neuro.polymtl.ca/annotations/v1/api/datasets/\?contrast\=t1&isotropic\=True > dataset.json</code>.
+</p>
+
 {% else %}
 
 <h2>Please sign in to continue.</h2>
