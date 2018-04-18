@@ -39,6 +39,7 @@ class DemographicInline(admin.StackedInline):
     extra = 0
     can_delete = False
 
+
 class DataListWidget(forms.TextInput):
 
     def __init__(self, name, data_list, *args, **kwargs):
@@ -142,14 +143,19 @@ class ImageAdmin(admin.ModelAdmin):
     list_filter = ('contrast', 'ms_mapping', 'gm_model', 'pam50', 'labeled_images__label')
     list_select_related = ('acquisition',)
     search_fields = ('acquisition__center', 'acquisition__study', 'acquisition__session')
-    fields = (
-        ('acquisition', 'goto_acquisition'),
-        ('contrast', 'filename', 'filestate'),
-        ('start_coverage', 'end_coverage'),
-        ('orientation', 'resolution'),
-        ('pam50', 'ms_mapping', 'gm_model'),
-    )
-    readonly_fields = ('filestate', 'goto_acquisition')
+    fieldsets = ((None, {'fields':
+                         (('acquisition', 'goto_acquisition'),
+                          'contrast',
+                          'filename',
+                          'filestate')}),
+                 ('Image structure', {'fields':
+                                      ('start_coverage',
+                                       'end_coverage',
+                                       'orientation',
+                                       'get_resolution',
+                                       'is_isotropic')}),
+                 ('Type of studies', {'fields': (('pam50', 'ms_mapping', 'gm_model'),)}), )
+    readonly_fields = ('filestate', 'goto_acquisition', 'get_resolution')
     inlines = [LabeledImageAdmin]
     save_on_top = True
     form = ImageForm
@@ -160,5 +166,10 @@ class ImageAdmin(admin.ModelAdmin):
             return mark_safe(f'<a href="{url}">Click here</a>')
         return ''
 
-    goto_acquisition.short_description = 'Return to Acquisition'
+    goto_acquisition.short_description = 'Goto to Acquisition form'
     goto_acquisition.allow_tags = True
+
+    def get_resolution(self, obj):
+        return mark_safe(obj.resolution)
+    get_resolution.short_description = 'Resolution (sag, cor, ax)'
+    get_resolution.allow_tags = True

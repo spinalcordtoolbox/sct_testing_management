@@ -25,12 +25,25 @@ class Datasets(SCTMixin, ListCreateAPIView):
             ('gm_model', 'images__gm_model'),
             ('contrast', 'images__contrast'),
             ('pathology', 'demographic__pathology'),
-            ('label', 'images__labeled_images__label')
+            ('label', 'images__labeled_images__label'),
+            ('isotropic', 'images__is_isotropic'),
         )
         filters = {}
         for param, filter_ in filter_list:
             if param in self.request.query_params:
                 filters[filter_] = self.request.query_params[param]
+
+        for param in ['sagittal', 'corrinal', 'axial']:
+            try:
+                val = self.request.query_params[param]
+                vals = [float(x) for x in val.split('-')]
+                if len(vals) == 2:
+                    filters[f'images__{param}__range'] = vals
+
+                if len(vals) == 1:
+                    filters[f'images__{param}__range'] = (vals[0] - 0.01, vals[0] + 0.01)
+            except KeyError:
+                pass
 
         if filters:
             return queryset.filter(**filters)

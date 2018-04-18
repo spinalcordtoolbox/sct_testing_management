@@ -16,9 +16,6 @@ class FileNameMixin(models.Model):
     NO_FILE = ('NA', 'File not available')
     ERR_FILE = ('ERR', 'File error')
     FILESTATE = (OK_FILE, NO_FILE, ERR_FILE)
-    SAG_CONST = 0
-    COR_CONST = 1
-    AX_CONST = 2
     img_object = None
 
     filename = models.CharField(
@@ -55,39 +52,6 @@ class FileNameMixin(models.Model):
             self.error_msg = str(err)
             logger.warning(err)
             return False
-
-    def calculate_resolution(self):
-        """Calculate the resolution in a string format
-
-        Returns
-        -------
-        str
-            The resolution in the form of `XxYxZ`
-        """
-        img = self.validate_filename()
-        resolution = img.header.get_zooms()
-        return 'x'.join(['{0:.2f}'.format(i) for i in resolution])
-
-
-    def calculate_orientation(self):
-        """Calculate the orientation of the image,
-
-        The values is calculated by taking the z value of the io_orientation of the image
-
-        Returns
-        -------
-        str
-            The string corresponding to the orientation of the image
-        """
-
-        img = self.validate_filename()
-        axis = nib.orientations.io_orientation(img.header.get_best_affine())
-        if axis[2][0] == self.SAG_CONST:
-            return 'sag'
-        if axis[2][0] == self.COR_CONST:
-            return 'cor'
-        if axis[2][0] == self.AX_CONST:
-            return 'ax'
 
     def save(self, *args, **kwargs):
         self.validate_filename()
@@ -129,6 +93,10 @@ class Demographic(models.Model):
 
 
 class Image(FileNameMixin):
+    SAG_CONST = 0
+    COR_CONST = 1
+    AX_CONST = 2
+    PLANE_CONST = {SAG_CONST: 'sag', COR_CONST: 'cor', AX_CONST: 'ax'}
     acquisition = models.ForeignKey(
         Acquisition, on_delete=models.CASCADE, related_name='images'
     )
@@ -136,8 +104,13 @@ class Image(FileNameMixin):
     start_coverage = models.CharField(max_length=16, null=True, blank=True)
     end_coverage = models.CharField(max_length=16, null=True, blank=True)
     orientation = models.CharField(max_length=16, null=True, blank=True)
-    resolution = models.CharField(max_length=16, null=True, blank=True,
-                                  help_text='The resolution of the nifti file')
+
+    # isotropic resolution
+    is_isotropic = models.BooleanField(default=False)
+    sagittal = models.FloatField(default=1.0)
+    corrinal = models.FloatField(default=1.0)
+    axial = models.FloatField(default=1.0)
+
     # study
     pam50 = models.BooleanField(default=False,
                                 help_text='Is image used in the generation of PAM50')
@@ -149,11 +122,33 @@ class Image(FileNameMixin):
     def __str__(self):
         return f'{self.contrast} -- {self.acquisition}'
 
+    @property
+    def resolution(self):
+        return f'{self.sagittal:4.2f} x {self.corrinal:4.2f} x {self.axial:4.2f}'
+
+    def populate_dimensions(self):
+        """Calculate orientation and resolution of the image
+        """
+        img = self.validate_filename()
+        resolution = img.header.get_zooms()
+        axes = self.calculate_orientation_axis()
+        idxs = [int(x[0]) for x in axes]
+        lookup = dict(zip(idxs, resolution))
+
+        self.is_isotropic = round(resolution[0], 5) == round(resolution[1], 5) == round(resolution[2], 5)
+        self.sagittal = lookup[self.SAG_CONST]
+        self.corrinal = lookup[self.COR_CONST]
+        self.axial = lookup[self.AX_CONST]
+        self.orientation = self.PLANE_CONST[idxs[2]]
+
+    def calculate_orientation_axis(self):
+        img = self.validate_filename()
+        return nib.orientations.io_orientation(img.header.get_best_affine())
+
     def save(self, *args, **kwargs):
         img = self.validate_filename()
         if img:
-            self.resolution = self.calculate_resolution()
-            self.orientation = self.calculate_orientation()
+            self.populate_dimensions()
 
         super().save(*args, **kwargs)
 

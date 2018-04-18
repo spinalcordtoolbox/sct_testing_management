@@ -15,9 +15,9 @@ class TestDatasetApi(TestCase):
         acq1 = factories.AcquisitionFactory()
         factories.DemographicFactory(acquisition=acq)
         factories.DemographicFactory(acquisition=acq1)
-        factories.ImageFactory(acquisition=acq, contrast='t1', pam50=False)
-        factories.ImageFactory(acquisition=acq, contrast='t2', pam50=False)
-        factories.ImageFactory(acquisition=acq, contrast='mt', pam50=True)
+        factories.ImageFactory(acquisition=acq, contrast='t1')
+        factories.ImageFactory(acquisition=acq, contrast='t2')
+        factories.ImageFactory(acquisition=acq, contrast='mt', pam50=True, is_isotropic=True, sagittal=2.0)
 
         user = factories.UserFactory(username='test-admin')
         user.set_password('secret')
@@ -51,6 +51,28 @@ class TestDatasetApi(TestCase):
         self.client.login(username='test-admin', password='secret')
         response = self.client.get(
             reverse('annotations:api-datasets'), {'contrast': 't2'}
+        )
+        assert response.status_code == 200
+        assert len(response.data) == 1
+
+    def test_get_isotropic(self):
+        self.client.login(username='test-admin', password='secret')
+        response = self.client.get(
+            reverse('annotations:api-datasets'), {'isotropic': 'True'}
+        )
+        assert response.status_code == 200
+        assert len(response.data) == 1
+
+    def test_get_saggital(self):
+        self.client.login(username='test-admin', password='secret')
+        response = self.client.get(
+            reverse('annotations:api-datasets'), {'sagittal': '1.0-3.0'}
+        )
+        assert response.status_code == 200
+        assert len(response.data) == 1
+
+        response = self.client.get(
+            reverse('annotations:api-datasets'), {'sagittal': '2.0'}
         )
         assert response.status_code == 200
         assert len(response.data) == 1

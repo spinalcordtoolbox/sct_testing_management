@@ -23,10 +23,9 @@ class DemographicFactory(factory.django.DjangoModelFactory):
 
 class ImageFactory(factory.django.DjangoModelFactory):
 
-    contrast = fuzzy.FuzzyChoice(['t1', 't2', 't2s'])
-    pam50 = fuzzy.FuzzyChoice([True, False])
-    ms_mapping = fuzzy.FuzzyChoice([False, True])
     filename = fuzzy.FuzzyText(suffix='.nii.gz')
+    pam50 = False
+    sagittal = 0.0
 
     class Meta:
         model = Image
