@@ -14,7 +14,7 @@ class SCTMixin(object):
 
 class Datasets(SCTMixin, ListCreateAPIView):
 
-    queryset = Acquisition.objects.select_related('demographic').all()
+    queryset = Acquisition.objects.select_related('demographic').all().prefetch_related('images')
     serializer_class = AcquisitionSerializer
 
     def get_queryset(self):
