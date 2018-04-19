@@ -9,6 +9,16 @@ A web application to manage the metadata of MRI images.
 
 :License: MIT
 
+Installation
+------------
+
+The web application is a django application developed and tested on Python==3.6
+and PostgresSQL==9.6. Follow these instructions if you plan to `install
+locally`_ or `install using docker`_
+
+.. _`install locally`: https://cookiecutter-django.readthedocs.io/en/latest/developing-locally.html
+.. _`install using docker`: https://cookiecutter-django.readthedocs.io/en/latest/deployment-with-docker.html
+
 
 Settings
 --------
