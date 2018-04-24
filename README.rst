@@ -91,7 +91,7 @@ Deployment
 ----------
 
 The web application can be deployed either natively or within a container. In
-the current production it is running in a docker container. It is managed by `internal ansible scripts`. 
+the current production it is running in a docker container. It is managed by `internal ansible scripts`_. 
 
 .. _`internal ansible scripts`: https://github.com/neuropoly/sct_testing_management_ansible
 
