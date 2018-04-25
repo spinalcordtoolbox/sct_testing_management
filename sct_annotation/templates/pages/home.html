@@ -60,8 +60,23 @@
         <li><strong>corrinal</strong> float or float range ex: 4.0 or 2.0-5.0</li>
         <li><strong>axial</strong> float or float range ex: 4.0 or 2.0-5.0</li>
     </ol>
-    An example, that will copy the dataset into a file:
-    <code>curl -H "Content-Type: application/json" -u [username]:[password] http://tristano.neuro.polymtl.ca/annotations/v1/api/datasets/\?contrast\=t1&isotropic\=True > dataset.json</code>.
+    <p>
+        An example, that will copy the dataset into a file:
+    </p>
+    <code>
+curl -H "Content-Type: application/json" -u [username]:[password] http://tristano.neuro.polymtl.ca/annotations/v1/api/datasets/\?contrast\=t1&isotropic\=True > dataset.json
+    </code>.
+    <p>
+        In python code:
+    </p>
+    <pre>
+import requests
+import requests.auth as auth
+aa = auth.HTTPBasicAuth('username', 'password')
+params = {'contrast': 't2', 'gm_model': True, 'label': 'seg_manual'}
+response = request.get('>http://tristano.neuro.polymtl.ca/annotations/v1/api/datasets/', auth=aa, params=params)
+dataset = response.json()
+    </pre>
 </p>
 
 {% else %}
