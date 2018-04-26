@@ -74,10 +74,29 @@ import requests
 import requests.auth as auth
 aa = auth.HTTPBasicAuth('username', 'password')
 params = {'contrast': 't2', 'gm_model': True, 'label': 'seg_manual'}
-response = request.get('>http://tristano.neuro.polymtl.ca/annotations/v1/api/datasets/', auth=aa, params=params)
+response = request.get('http://tristano.neuro.polymtl.ca/annotations/v1/api/datasets/', auth=aa, params=params)
 dataset = response.json()
     </pre>
 </p>
+
+<pre>
+data = {'center': 'c101', 'study': 'st1', 'scanner': 'sc1', 'session': 'ses1'}
+resp = requests.post('http://tristano.neuro.polymtl.ca/annotations/v1/api/datasets/', auth=aa, data=data)
+
+#make sure that resp.status_code == 201
+
+# first add the image and demographic values and post acq
+acq = resp.json()
+demographic = {'acquisition': acq['id'], 'pathology': 'DCM', 'researcher': 'Tester'}
+resp = requests.post('http://tristano.neuro.polymtl.ca/annotations/v1/api/demographics/', auth=aa, data=demographic)
+img = {'acquisition': acq['id'], 'contrast': 't2', 'filename': 'relative/path/to/file.nii.gz' }
+resp = requests.post('http://tristano.neuro.polymtl.ca/annotations/v1/api/images/', auth=aa, data=img)
+
+# second add the labeledimage values in the image item
+img = resp.json()
+labeled_img = {'contrast': img['id'], 'filename': 'relative/path/to/file.nii.gz', 'label': 'seg_manual'}
+resp = requests.post('http://tristano.neuro.polymtl.ca/annotations/v1/api/labeledimages/', auth=aa, data=labeled_img)
+</pre>
 
 {% else %}
 

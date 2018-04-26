@@ -2,8 +2,8 @@ from rest_framework.authentication import SessionAuthentication, BasicAuthentica
 from rest_framework.generics import ListCreateAPIView
 from rest_framework.permissions import IsAuthenticated
 
-from .models import Acquisition
-from .serializers import AcquisitionSerializer
+from .models import Acquisition, Image, LabeledImage, Demographic
+from .serializers import AcquisitionSerializer, ImageSerializer, LabeledImageSerializer, DemographicSerialer
 
 
 class SCTMixin(object):
@@ -27,6 +27,7 @@ class Datasets(SCTMixin, ListCreateAPIView):
             ('pathology', 'demographic__pathology'),
             ('label', 'images__labeled_images__label'),
             ('isotropic', 'images__is_isotropic'),
+            ('id', 'id'),
         )
         filters = {}
         for param, filter_ in filter_list:
@@ -48,3 +49,21 @@ class Datasets(SCTMixin, ListCreateAPIView):
         if filters:
             return queryset.filter(**filters)
         return queryset
+
+
+class Images(SCTMixin, ListCreateAPIView):
+
+    queryset = Image.objects.all()
+    serializer_class = ImageSerializer
+
+
+class LabeledImages(SCTMixin, ListCreateAPIView):
+
+    queryset = LabeledImage.objects.all()
+    serializer_class = LabeledImageSerializer
+
+
+class Demographics(SCTMixin, ListCreateAPIView):
+
+    queryset = Demographic.objects.all()
+    serializer_class = DemographicSerialer

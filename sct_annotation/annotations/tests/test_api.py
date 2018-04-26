@@ -97,3 +97,29 @@ class TestDatasetApi(TestCase):
             reverse('annotations:api-datasets'), data=data, format='json'
         )
         assert response.status_code == 201
+        data = response.json()
+        assert data['id']
+
+        img = {'acquisition': data['id'], 'filename': 'path/to/img.nii.gz', 'contrast': 't2'}
+        response = self.client.post(reverse('annotations:api-images'), data=img, format='json')
+        data_img = response.json()
+        assert response.status_code == 201
+        assert data_img['id']
+        assert data_img['acquisition'] == data['id']
+
+        labeled = {'contrast': data_img['id'], 'filename': 'path/to/labeled.nii.gz', 'label': 'seg_manual'}
+        response = self.client.post(reverse('annotations:api-labeledimages'), data=labeled, format='json')
+        data_labeled = response.json()
+        assert response.status_code == 201
+        assert data_labeled['contrast'] == data_img['id']
+
+
+    def test_get_image(self):
+        self.client.login(username='test-admin', password='secret')
+        response = self.client.get(reverse('annotations:api-images'), format='json')
+        assert response.status_code == 200
+
+    def test_get_labeledimages(self):
+        self.client.login(username='test-admin', password='secret')
+        response = self.client.get(reverse('annotations:api-labeledimages'), format='json')
+        assert response.status_code == 200
