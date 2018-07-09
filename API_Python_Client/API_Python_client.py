@@ -91,7 +91,7 @@ class image:
                 'orientation': self.orientation,
                 'is_isotropic': self.is_isotropic,
                 'sagittal' : self.sagittal,
-                'corrinal' : self.coronal,
+                'corrinal' : self.coronal, #TODO: "corrinal" typo error is in the Web Management System, here I have to use it like that to be able to insert information in the database
                 'axial' : self.axial,
                 'pam50' : self.pam50,
                 'ms_mapping' : self.ms_mapping,
