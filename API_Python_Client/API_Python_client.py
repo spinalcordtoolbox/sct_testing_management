@@ -5,6 +5,9 @@
 #  This file contains the python classes that represent the tables that
 #  exists en the database system. Using this code you can insert data
 #  to de database using a python interface.
+#  Python vesion 2.7 
+#  Additional libraries: requests (pip install requests)
+#  API Documentation: http://tristano.neuro.polymtl.ca/about/
 #
 #  author: Francisco Perdigon Romero
 #  github id: fperdigon
@@ -43,6 +46,7 @@ class demographic:
                 'researcher': self.researcher,
                 'acquisition': self.acquisition} # This is the link to the acquisition table acq['id']
 
+        # Generate the link to the API resource, more info see API Documentation
         resp = requests.post('http://' + hostname + ':' + port + '/annotations/v1/api/demographics/', auth=auth_DB, data=data)
         demographic = None
         if resp.status_code == 201:
@@ -94,6 +98,7 @@ class image:
                 'gm_model': self.gm_model,
                 'acquisition' : self.acquisition} # This is the link to the image acquisition acq['id']
 
+        # Generate the link to the API resource, more info see API Documentation
         resp = requests.post('http://' + hostname + ':' + port + '/annotations/v1/api/images/', auth=auth_DB, data=data)
         img = None
         if resp.status_code == 201:
@@ -126,7 +131,8 @@ class labeled_image:
                 'label': self.label,
                 'author': self.author,
                 'contrast': self.contrast} # This is the link to the image table img['id']
-
+        
+        # Generate the link to the API resource, more info see API Documentation
         resp = requests.post('http://' + hostname + ':' + port + '/annotations/v1/api/labeledimages/', auth=auth_DB, data=data)
         lb_img = None
         if resp.status_code == 201:
@@ -160,6 +166,8 @@ class acquisition:
                 'scanner': self.scanner,
                 'study': self.study,
                 'session': self.session}
+        
+        # Generate the link to the API resource, more info see API Documentation
         resp = requests.post('http://' + hostname + ':' + port + '/annotations/v1/api/datasets/', auth=auth_DB, data=data)
         acq = None
         if resp.status_code == 201:
