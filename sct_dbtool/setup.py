@@ -2,15 +2,12 @@ from setuptools import setup
 import sct_dbtool
 
 
-install_requirements = [
-        'setuptools>=0.6c11',
-        'docopt>=0.6.2',
-        'requests>=2.19.1',
-        'tqdm>=4.23.0',
-        'jinja2>=2.10',
-        'nibabel>=2.3.0',
-        'sphinx>=1.7.2',
-]
+def parse_requirements(filename):
+    lineiter = (line.strip() for line in open(filename))
+    return [line for line in lineiter if line and not line.startswith("#")]
+
+
+install_reqs = parse_requirements("requirements.txt")
 
 setup(
     name='sct_dbtool',
@@ -29,7 +26,7 @@ setup(
     },
     zip_safe=False,
     include_package_data=True,
-    install_requires=install_requirements,
+    install_requires=install_reqs,
     classifiers=[
         'Development Status :: 4 - Beta',
         'License :: OSI Approved :: Apache Software License',
