@@ -5,16 +5,19 @@ will apply custom checks into each item of the MRI database.
 
 Installation
 ------------------------------------------------------------------------------
-To install it, clone the repository and install with::
-
-    pip install .
-
 If you want, you can create a python environment with Anaconda::
 
-	conda create -n dbtoolenv python=3.6
-	source activate dbtoolenv
+    conda create -n dbtoolenv python=3.6
+    source activate dbtoolenv
 
-Before installing it.
+To install it, clone the repository and install with::
+
+    cd sct_dbtool
+    pip install .
+
+.. note:: If you are developing, install it in development mode with
+          `pip install -e .`, so changed mande in the source code
+          will reflect automatically in your environment.
 
 Configuration
 ------------------------------------------------------------------------------
@@ -30,7 +33,7 @@ How to use it
 ------------------------------------------------------------------------------
 To use it, just run the following command::
 
-    sct_dbtool sanity ../duke/sct_testing/large
+    sct_dbtool sanity [PATH_DUKE]/sct_testing/large
 
 Where the last parameter is the path to where the database files are. After
 running it, the tool will generate a output report called `report.html` that
