@@ -1,5 +1,4 @@
-SCT testing management web application
-======================================
+# SCT testing management web application
 
 A web application to manage the metadata of MRI images.
 
@@ -9,8 +8,7 @@ A web application to manage the metadata of MRI images.
 
 :License: MIT
 
-Installation
-------------
+## Installation
 
 The web application is a django application developed and tested on Python==3.6
 and PostgresSQL==9.6. Follow these instructions if you plan to `install
@@ -19,9 +17,8 @@ locally`_ or `install using docker`_
 .. _`install locally`: https://cookiecutter-django.readthedocs.io/en/latest/developing-locally.html
 .. _`install using docker`: https://cookiecutter-django.readthedocs.io/en/latest/deployment-with-docker.html
 
+## Settings
 
-Settings
---------
 Important settings constant to keep track of.
 
 - `POSTGRES_PASSWORD`: The password the web application logs in with
@@ -34,17 +31,14 @@ Important settings constant to keep track of.
   accept connections from
 - `SCT_DATASET_ROOT`: The absolute path to the sct_testing/large dataset.
 
-Basic Commands
---------------
+## Basic Commands
 
 Goes through the database and checks if the image filename exists and are valid
 nifti files::
 
   $ python manage.py check_filenames
 
-
-Setting Up Your Users
-^^^^^^^^^^^^^^^^^^^^^
+## Setting Up Your Users
 
 * To create a **normal user account**, just go to Sign Up and fill out the form.
   Once you submit it, you'll see a "Verify Your E-mail Address" page. Go to your
@@ -59,8 +53,7 @@ For convenience, you can keep your normal user logged in on Chrome and your
 superuser logged in on Firefox (or similar), so that you can see how the site
 behaves for both kinds of users.
 
-Setting up the development environment
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+## Setting up the development environment
 
 Make sure the environment variables are set. A development web application
 should be launched with sqlite instead of postgres. Here's an example of the
@@ -78,25 +71,20 @@ Once setup is done, you can run an instance of web application, you can run::
 
    $ export DJANGO_READ_DOT_ENV_FILE=1; python manage.py runserver_plus
 
-
-Running tests
-^^^^^^^^^^^^^
+## Running tests
 
 Tests are focused on the API and the ORM testing. All the tests run by running::
 
   $ export DJANGO_READ_DOT_ENV_FILE=1; python manage.py test
 
-
-Deployment
-----------
+## Deployment/Maintenance
 
 The web application can be deployed either natively or within a container. In
 the current production it is running in a docker container. It is managed by `internal ansible scripts`_. 
 
 .. _`internal ansible scripts`: https://github.com/neuropoly/sct_testing_management_ansible
 
-Docker
-^^^^^^
+### Docker
 
 See detailed `cookiecutter-django Docker documentation`_.
 
