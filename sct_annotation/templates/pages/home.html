@@ -92,7 +92,7 @@ resp = requests.post('http://tristano.neuro.polymtl.ca/annotations/v1/api/demogr
 img = {'acquisition': acq['id'], 'contrast': 't2', 'filename': 'relative/path/to/file.nii.gz' }
 resp = requests.post('http://tristano.neuro.polymtl.ca/annotations/v1/api/images/', auth=aa, data=img)
 
-# second add the labeledimage values in the image item
+# second add the labeled image values in the image item
 img = resp.json()
 labeled_img = {'contrast': img['id'], 'filename': 'relative/path/to/file.nii.gz', 'label': 'seg_manual'}
 resp = requests.post('http://tristano.neuro.polymtl.ca/annotations/v1/api/labeledimages/', auth=aa, data=labeled_img)
