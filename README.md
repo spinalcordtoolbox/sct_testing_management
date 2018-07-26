@@ -77,6 +77,16 @@ Tests are focused on the API and the ORM testing. All the tests run by running::
 
   $ export DJANGO_READ_DOT_ENV_FILE=1; python manage.py test
 
+## POSTGRESQL database
+To create backup execute:
+`docker-compose -f /opt/sct_testing_management/production.yml exec postgres backup`
+
+To list existing backups execute:
+`docker-compose -f /opt/sct_testing_management/production.yml exec postgres list-backups`
+
+To restore backup execute:
+`docker-compose -f /opt/sct_testing_management/production.yml exec postgres filename_backup.sql.gz`
+
 ## Deployment/Maintenance
 
 The web application can be deployed either natively or within a container. In
