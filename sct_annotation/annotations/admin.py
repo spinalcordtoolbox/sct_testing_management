@@ -105,7 +105,7 @@ class LabeledImageForm(forms.ModelForm):
 
 class LabeledImageAdmin(admin.StackedInline):
     model = models.LabeledImage
-    fields = ('label', 'filename', 'filestate', 'author')
+    fields = ('label', 'filename', 'filestate', 'author','label_needs_correction')
     readonly_fields = ('filestate',)
     extra = 0
     can_delete = False
