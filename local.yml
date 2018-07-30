@@ -15,6 +15,7 @@ services:
       - .:/app
     environment:
       - POSTGRES_USER=sct_annotation
+      - POSTGRES_PASSWORD=test
       - USE_DOCKER=yes
     ports:
       - "8000:8000"
@@ -29,6 +30,7 @@ services:
       - postgres_backup_local:/backups
     environment:
       - POSTGRES_USER=sct_annotation
+      - POSTGRES_PASSWORD=test
 
 
   redis:
