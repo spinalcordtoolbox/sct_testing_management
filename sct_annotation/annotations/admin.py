@@ -140,7 +140,7 @@ class AcquisitionAdmin(admin.ModelAdmin):
 @admin.register(models.Image)
 class ImageAdmin(admin.ModelAdmin):
     list_display = ('acquisition', 'contrast', 'filename')
-    list_filter = ('contrast', 'ms_mapping', 'gm_model', 'pam50', 'labeled_images__label')
+    list_filter = ('contrast', 'ms_mapping', 'gm_model', 'pam50', 'labeled_images__label', 'labeled_images__label_needs_correction')
     list_select_related = ('acquisition',)
     search_fields = ('acquisition__center', 'acquisition__study', 'acquisition__session')
     fieldsets = ((None, {'fields':
