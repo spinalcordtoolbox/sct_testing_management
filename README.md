@@ -94,6 +94,25 @@ the current production it is running in a docker container. It is managed by `in
 
 .. _`internal ansible scripts`: https://github.com/neuropoly/sct_testing_management_ansible
 
+## Development
+If you want to do developement use joplin with the user sct_testing_management_db.
+
+Than check the git status in the folder:  `~/devel/sct_testing_management/`. Pick you branch and build the docker stack by executing:
+
+`docker-compose -f ~/devel/sct_testing_management/local.yml build`
+
+Migrate Django DB :
+`docker-compose -f ~/devel/sct_testing_management/local.yml run --rm django python manage.py migrate`
+
+In order to start the webserver use the commad: 
+`docker-compose -f ~/devel/sct_testing_management/local.yml up -d`
+
+In order to have access to the webpage you need to forward the port to your localmachine. This can be done like this: 
+`ssh -L 8100:joplin.neuro.polymtl.ca:8000 sct_testing_management_dev@joplin.neuro.polymtl.ca`
+
+If you want to remove all docker images,containers etc. use the following command:
+`./docker_clean_all.sh`
+
 ### Docker
 
 See detailed `cookiecutter-django Docker documentation`_.
