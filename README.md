@@ -104,6 +104,9 @@ Than check the git status in the folder:  `~/devel/sct_testing_management/`. Pic
 Migrate Django DB :
 `docker-compose -f ~/devel/sct_testing_management/local.yml run --rm django python manage.py migrate`
 
+To create Django superuser:
+`docker-compose -f local.yml run --rm django python manage.py createsuperuser`
+
 In order to start the webserver use the commad: 
 `docker-compose -f ~/devel/sct_testing_management/local.yml up -d`
 
