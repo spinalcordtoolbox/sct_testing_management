@@ -111,10 +111,7 @@ In order to start the webserver use the commad:
 `docker-compose -f ~/devel/sct_testing_management/local.yml up -d`
 
 In order to have access to the webpage you need to forward the port to your localmachine. This can be done like this: 
-`ssh -L 8100:joplin.neuro.polymtl.ca:8000 sct_testing_management_dev@joplin.neuro.polymtl.ca`
-
-If you want to remove all docker images,containers etc. use the following command:
-`./docker_clean_all.sh`
+`ssh -L 8100:joplin.neuro.polymtl.ca:8000 sct_management_dev@joplin.neuro.polymtl.ca`
 
 ### Docker
 
