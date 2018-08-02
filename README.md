@@ -110,7 +110,8 @@ To create Django superuser:
 In order to start the webserver use the commad: 
 `docker-compose -f ~/devel/sct_testing_management/local.yml up -d`
 
-In order to have access to the webpage you need to forward the port to your local machine. This can be done like this: 
+In order to have access to the webpage you need to forward the port to your local machine using the local user on joplin explained [here](https://www.neuro.polymtl.ca/internal_resources/list_of_computers?&#joplin_64-core_cpu). This can be done like this: 
+
 `ssh -L 8100:joplin.neuro.polymtl.ca:8000 neuropoly_local@joplin.neuro.polymtl.ca`
 
 ### Docker
