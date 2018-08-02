@@ -95,24 +95,7 @@ the current production it is running in a docker container. It is managed by `in
 .. _`internal ansible scripts`: https://github.com/neuropoly/sct_testing_management_ansible
 
 ## Development
-If you want to do developement use joplin with the user sct_testing_management_db.
-
-Than check the git status in the folder:  `~/devel/sct_testing_management/`. Pick you branch and build the docker stack by executing:
-
-`docker-compose -f ~/devel/sct_testing_management/local.yml build`
-
-Migrate Django DB :
-`docker-compose -f ~/devel/sct_testing_management/local.yml run --rm django python manage.py migrate`
-
-To create Django superuser:
-`docker-compose -f local.yml run --rm django python manage.py createsuperuser`
-
-In order to start the webserver use the commad: 
-`docker-compose -f ~/devel/sct_testing_management/local.yml up -d`
-
-In order to have access to the webpage you need to forward the port to your local machine using the local user on joplin explained [here](https://www.neuro.polymtl.ca/internal_resources/list_of_computers?&#joplin_64-core_cpu). This can be done like this: 
-
-`ssh -L 8100:joplin.neuro.polymtl.ca:8000 neuropoly_local@joplin.neuro.polymtl.ca`
+Checkout the [wiki page](https://github.com/neuropoly/sct_testing_management/wiki/Development).
 
 ### Docker
 
