@@ -6,6 +6,17 @@ A web application to manage the metadata of MRI images.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
+- [Installation](#installation)
+- [Settings](#settings)
+- [Basic Commands](basic-commands)
+- [Setting Up Your Users](setting-up-your-users)
+- [Setting up the development environment](setting-up-the-development-environment)
+- [Running tests](running-tests)
+- [POSTGRESQL database](postgresql-database)
+- [Deployment/Maintenance](deploymentmaintenance)
+- [Development](development)
+  - [Testing from a specific branch](testing-from-a-specific-branch)
+
 ## Installation
 
 The web application is a django application developed and tested on Python==3.6
