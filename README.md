@@ -3,25 +3,26 @@
 A web application to manage the metadata of MRI images.
 
 [![Build Status](https://travis-ci.org/neuropoly/sct_testing_management.svg?branch=master)](https://travis-ci.org/neuropoly/sct_testing_management)
-
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 - [Installation](#installation)
-- [Settings](#settings)
-- [Basic Commands](#basic-commands)
-- [Setting Up Your Users](#setting-up-your-users)
-- [Setting up the development environment](#setting-up-the-development-environment)
-- [Running tests](#running-tests)
+  - [Settings](#settings)
+  - [Basic Commands](#basic-commands)
+  - [Setting Up Your Users](#setting-up-your-users)
+  - [Setting up the development environment](#setting-up-the-development-environment)
+  - [Running tests](#running-tests)
 - [POSTGRESQL database](#postgresql-database)
 - [Deployment/Maintenance](#deploymentmaintenance)
 - [Development](#development)
   - [Testing from a specific branch](#testing-from-a-specific-branch)
 
-## Installation
+# Installation
 
 The web application is a django application developed and tested on Python==3.6
 and PostgresSQL==9.6. Follow these instructions if you plan to [install
-locally](https://cookiecutter-django.readthedocs.io/en/latest/developing-locally.html) or [install using docker](https://cookiecutter-django.readthedocs.io/en/latest/deployment-with-docker.html)
+locally](https://cookiecutter-django.readthedocs.io/en/latest/developing-locally.html) or [install using docker](https://cookiecutter-django.readthedocs.io/en/latest/deployment-with-docker.html).
+
+In the current production it is running in a docker container. It is managed by [internal ansible scripts](https://github.com/neuropoly/sct_testing_management_ansible)
 
 ## Settings
 
@@ -95,7 +96,7 @@ Tests are focused on the API and the ORM testing. All the tests run by running:
 export DJANGO_READ_DOT_ENV_FILE=1; python manage.py test
 ~~~
 
-## POSTGRESQL database
+# POSTGRESQL database
 Create backup:
 ~~~
 docker-compose -f /opt/sct_testing_management/production.yml exec postgres backup`
@@ -111,15 +112,10 @@ Restore backup:
 docker-compose -f /opt/sct_testing_management/production.yml exec postgres filename_backup.sql.gz
 ~~~
 
-## Deployment/Maintenance
+# Development
+## Testing from a specific branch
 
-The web application can be deployed either natively or within a container. In
-the current production it is running in a docker container. It is managed by [internal ansible scripts](https://github.com/neuropoly/sct_testing_management_ansible)
-
-## Development
-### Testing from a specific branch
-
-#### 1. Switch to your development branch
+### 1. Switch to your development branch
 1. If you want to do development use ssh connection on the development server.
 
 2. Check the git status in the folder:  `~/devel/sct_testing_management/`, by running the command:
@@ -128,7 +124,7 @@ the current production it is running in a docker container. It is managed by [in
 3. Pick you branch:
 `git checkout yourbranch`
 
-#### 2. Start the docker containers
+### 2. Start the docker containers
 1. Build the docker stack by executing:
 `docker-compose -f ~/devel/sct_testing_management/local.yml build`
 
@@ -141,7 +137,7 @@ the current production it is running in a docker container. It is managed by [in
 4. In order to start the webserver use the command: 
 `docker-compose -f ~/devel/sct_testing_management/local.yml up -d`
 
-#### 3. Run tests from your machine
+### 3. Run tests from your machine
 
 1. In your terminal run : 
 `ssh -L 8100:ip_development_server:8000 username@ip_development_server`. Do not close the terminal window.
