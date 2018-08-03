@@ -12,7 +12,6 @@ A web application to manage the metadata of MRI images.
   - [Setting up the development environment](#setting-up-the-development-environment)
   - [Running tests](#running-tests)
 - [POSTGRESQL database](#postgresql-database)
-- [Deployment/Maintenance](#deploymentmaintenance)
 - [Development](#development)
   - [Testing from a specific branch](#testing-from-a-specific-branch)
 
