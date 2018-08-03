@@ -40,9 +40,11 @@ Important settings constant to keep track of.
 ## Basic Commands
 
 Goes through the database and checks if the image filename exists and are valid
-nifti files::
+nifti files:
 
-  $ python manage.py check_filenames
+~~~
+python manage.py check_filenames
+~~~
 
 ## Setting Up Your Users
 
@@ -51,9 +53,11 @@ nifti files::
   console to see a simulated email verification message. Copy the link into your
   browser. Now the user's email should be verified and ready to go.
 
-* To create an **superuser account**, use this command::
+* To create an **superuser account**, use this command:
 
-  $ python manage.py createsuperuser
+~~~
+python manage.py createsuperuser
+~~~
 
 For convenience, you can keep your normal user logged in on Chrome and your
 superuser logged in on Firefox (or similar), so that you can see how the site
@@ -63,45 +67,58 @@ behaves for both kinds of users.
 
 Make sure the environment variables are set. A development web application
 should be launched with sqlite instead of postgres. Here's an example of the
-.env file::
+.env file:
 
-  DJANGO_SETTINGS_MODULE=config.settings.local
-  DJANGO_DEBUG=True
-  DATABASE_URL=sqlite:///sct_annotation.db
+~~~
+DJANGO_SETTINGS_MODULE=config.settings.local
+DJANGO_DEBUG=True
+DATABASE_URL=sqlite:///sct_annotation.db
+~~~
 
-The database initialization is needed for the first time::
+The database initialization is needed for the first time:
 
-   $ export DJANGO_READ_DOT_ENV_FILE=1; python manage.py migrate
+~~~
+export DJANGO_READ_DOT_ENV_FILE=1; python manage.py migrate
+~~~
 
-Once setup is done, you can run an instance of web application, you can run::
+Once setup is done, you can run an instance of web application, you can run:
 
-   $ export DJANGO_READ_DOT_ENV_FILE=1; python manage.py runserver_plus
+~~~
+export DJANGO_READ_DOT_ENV_FILE=1; python manage.py runserver_plus
+~~~
 
 ## Running tests
 
-Tests are focused on the API and the ORM testing. All the tests run by running::
+Tests are focused on the API and the ORM testing. All the tests run by running:
 
-  $ export DJANGO_READ_DOT_ENV_FILE=1; python manage.py test
+~~~
+export DJANGO_READ_DOT_ENV_FILE=1; python manage.py test
+~~~
 
 ## POSTGRESQL database
-To create backup execute:
-`docker-compose -f /opt/sct_testing_management/production.yml exec postgres backup`
+Create backup:
+~~~
+docker-compose -f /opt/sct_testing_management/production.yml exec postgres backup`
+~~~
 
-To list existing backups execute:
-`docker-compose -f /opt/sct_testing_management/production.yml exec postgres list-backups`
+List existing backups:
+~~~
+docker-compose -f /opt/sct_testing_management/production.yml exec postgres list-backups
+~~~
 
-To restore backup execute:
-`docker-compose -f /opt/sct_testing_management/production.yml exec postgres filename_backup.sql.gz`
+Restore backup:
+~~~
+docker-compose -f /opt/sct_testing_management/production.yml exec postgres filename_backup.sql.gz
+~~~
 
 ## Deployment/Maintenance
 
 The web application can be deployed either natively or within a container. In
-the current production it is running in a docker container. It is managed by `internal ansible scripts`_. 
-
-.. _`internal ansible scripts`: https://github.com/neuropoly/sct_testing_management_ansible
+the current production it is running in a docker container. It is managed by [internal ansible scripts](https://github.com/neuropoly/sct_testing_management_ansible)
 
 ## Development
- ### How to test the DB from a specific branch ? 
+### Testing from a specific branch
+
 #### 1. Switch to your development branch
 1. If you want to do development use ssh connection on the development server.
 
@@ -133,7 +150,4 @@ the current production it is running in a docker container. It is managed by `in
 
 ### Docker
 
-See detailed `cookiecutter-django Docker documentation`_.
-
-.. _`cookiecutter-django Docker documentation`: http://cookiecutter-django.readthedocs.io/en/latest/deployment-with-docker.html
-
+See detailed [cookiecutter-django Docker documentation](http://cookiecutter-django.readthedocs.io/en/latest/deployment-with-docker.html)
