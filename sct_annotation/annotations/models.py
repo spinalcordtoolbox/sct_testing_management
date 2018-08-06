@@ -168,6 +168,6 @@ class LabeledImage(FileNameMixin):
                              choices=LABELS,
                              help_text='What type of labeled image')
     author = models.CharField(max_length=64, null=True, blank=True)
-
+    label_needs_correction = models.BooleanField(default=False)
     def __str__(self):
         return f'{self.label} -- {self.contrast}'
