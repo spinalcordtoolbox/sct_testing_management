@@ -115,7 +115,7 @@ docker-compose -f /opt/sct_testing_management/production.yml exec postgres filen
 ## Testing from a specific branch
 
 ### 1. Switch to your development branch
-1. If you want to do development use ssh connection on the development server.
+1. If you want to do development use ssh connection on any station on the same VLAN as tristano.
 
 2. Check the git status in the folder:  `~/devel/sct_testing_management/`, by running the command:
 `git status`
@@ -139,7 +139,7 @@ docker-compose -f /opt/sct_testing_management/production.yml exec postgres filen
 ### 3. Run tests from your machine
 
 1. In your terminal run : 
-`ssh -L 8100:ip_development_server:8000 username@ip_development_server`. Do not close the terminal window.
+`ssh -L 8100:ip_development_station:8000 username@ip_development_station`. Do not close the terminal window.
 
 2. In your web browser go to : [link](http://localhost:8100/admin/annotations/image/?). Use username: sct_test_user; passwd: management.
 
