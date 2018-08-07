@@ -93,6 +93,20 @@ class Demographic(models.Model):
 
 
 class Image(FileNameMixin):
+    COVERAGE_CHOICES=(
+        ('Brain','Brain'),
+        ('PMJ','PMJ'),
+        ('C1','C1'),
+        ('C2','C2'),
+        ('C3','C3'),
+        ('C4','C4'),
+        ('C5','C5'),
+        ('C6','C6'),
+        ('C6','C6'),
+        ('C7','C6'),
+        ('C8','C8'),
+        ('','N/A'),
+        )
     SAG_CONST = 0
     COR_CONST = 1
     AX_CONST = 2
@@ -101,8 +115,8 @@ class Image(FileNameMixin):
         Acquisition, on_delete=models.CASCADE, related_name='images'
     )
     contrast = models.CharField(max_length=32)
-    start_coverage = models.CharField(max_length=16, null=True, blank=True)
-    end_coverage = models.CharField(max_length=16, null=True, blank=True)
+    start_coverage = models.CharField(max_length=16, choices=COVERAGE_CHOICES, default='')
+    end_coverage = models.CharField(max_length=16,  choices=COVERAGE_CHOICES, default='')
     orientation = models.CharField(max_length=16, null=True, blank=True)
 
     # isotropic resolution
