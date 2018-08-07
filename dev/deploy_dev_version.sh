@@ -1,6 +1,12 @@
 #!/bin/bash
 
-#Get time for performance testing
+#To run this script follow the pattern: ./deploy_dev_version.sh dev_branch backup_file_location backup_filename
+
+# WARNING !!!
+# Running the following script will perform a deep Docker prune (delete all containers,images and volumes)
+# Any versions of this repository located under ~/devel/ will be removed.
+
+# Get time for performance testing
 start=`date +%s`
 
 #Define text formatting
