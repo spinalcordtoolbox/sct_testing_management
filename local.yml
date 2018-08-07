@@ -17,7 +17,6 @@ services:
       - POSTGRES_USER=sct_annotation
       - POSTGRES_PASSWORD=test
       - USE_DOCKER=yes
-      - SCT_DATASET_ROOT=/Volumes/sct_testing/large
     ports:
       - "8000:8000"
     command: /start.sh
