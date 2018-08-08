@@ -22,7 +22,7 @@ class FileNameMixin(models.Model):
         'File path',
         max_length=512,
         unique=True,
-        help_text=f'path prefix: {settings.SCT_DATASET_ROOT}'
+        help_text=f'path prefix: {settings.SCT_DATASET_ROOT}/'
     )
     filestate = models.CharField(
         'The state of the file',
