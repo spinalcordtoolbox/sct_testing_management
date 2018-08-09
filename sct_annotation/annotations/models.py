@@ -120,6 +120,14 @@ class Image(FileNameMixin):
         ('L3','L3'),
         ('','N/A'),
         )
+    CONTRAST_CHOICES=(
+        ('dwi','DWI'),
+        ('fmri','FMRI'),
+        ('t1','T1'),
+        ('t2','T2'),
+        ('t2s','T2s'),
+        ('','N/A'),
+        )
     SAG_CONST = 0
     COR_CONST = 1
     AX_CONST = 2
@@ -127,7 +135,7 @@ class Image(FileNameMixin):
     acquisition = models.ForeignKey(
         Acquisition, on_delete=models.CASCADE, related_name='images'
     )
-    contrast = models.CharField(max_length=32)
+    contrast = models.CharField(max_length=32, choices=CONTRAST_CHOICES, default=''))
     start_coverage = models.CharField(max_length=16, choices=COVERAGE_CHOICES, default='')
     end_coverage = models.CharField(max_length=16, choices=COVERAGE_CHOICES, default='')
     orientation = models.CharField(max_length=16, null=True, blank=True)
