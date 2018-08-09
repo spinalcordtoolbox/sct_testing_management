@@ -70,7 +70,7 @@ class Acquisition(models.Model):
     session = models.CharField(max_length=64)
 
     def __str__(self):
-        return f'{self.center} {self.study} {self.session}'
+        return f'{self.center}_{self.study}_{self.session}'
 
     class Meta:
         unique_together = (('center', 'study', 'session'))
