@@ -129,7 +129,7 @@ class Image(FileNameMixin):
     )
     contrast = models.CharField(max_length=32)
     start_coverage = models.CharField(max_length=16, choices=COVERAGE_CHOICES, default='')
-    end_coverage = models.CharField(max_length=16,  choices=COVERAGE_CHOICES, default='')
+    end_coverage = models.CharField(max_length=16, choices=COVERAGE_CHOICES, default='')
     orientation = models.CharField(max_length=16, null=True, blank=True)
 
     # isotropic resolution
