@@ -93,6 +93,33 @@ class Demographic(models.Model):
 
 
 class Image(FileNameMixin):
+    COVERAGE_CHOICES=(
+        ('Brain','Brain'),
+        ('PMJ','PMJ'),
+        ('C1','C1'),
+        ('C2','C2'),
+        ('C3','C3'),
+        ('C4','C4'),
+        ('C5','C5'),
+        ('C6','C6'),
+        ('C7','C7'),
+        ('T1','T1'),
+        ('T2','T2'),
+        ('T3','T3'),
+        ('T4','T4'),
+        ('T5','T5'),
+        ('T6','T6'),
+        ('T7','T7'),
+        ('T8','T8'),
+        ('T9','T9'),
+        ('T10','T10'),
+        ('T11','T11'),
+        ('T12','T12'),
+        ('L1','L1'),
+        ('L2','L2'),
+        ('L3','L3'),
+        ('','N/A'),
+        )
     SAG_CONST = 0
     COR_CONST = 1
     AX_CONST = 2
@@ -101,8 +128,8 @@ class Image(FileNameMixin):
         Acquisition, on_delete=models.CASCADE, related_name='images'
     )
     contrast = models.CharField(max_length=32)
-    start_coverage = models.CharField(max_length=16, null=True, blank=True)
-    end_coverage = models.CharField(max_length=16, null=True, blank=True)
+    start_coverage = models.CharField(max_length=16, choices=COVERAGE_CHOICES, default='')
+    end_coverage = models.CharField(max_length=16, choices=COVERAGE_CHOICES, default='')
     orientation = models.CharField(max_length=16, null=True, blank=True)
 
     # isotropic resolution
