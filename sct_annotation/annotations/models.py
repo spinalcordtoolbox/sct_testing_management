@@ -135,7 +135,7 @@ class Image(FileNameMixin):
     acquisition = models.ForeignKey(
         Acquisition, on_delete=models.CASCADE, related_name='images'
     )
-    contrast = models.CharField(max_length=32, choices=CONTRAST_CHOICES, default=''))
+    contrast = models.CharField(max_length=32, choices=CONTRAST_CHOICES, default='')
     start_coverage = models.CharField(max_length=16, choices=COVERAGE_CHOICES, default='')
     end_coverage = models.CharField(max_length=16, choices=COVERAGE_CHOICES, default='')
     orientation = models.CharField(max_length=16, null=True, blank=True)
