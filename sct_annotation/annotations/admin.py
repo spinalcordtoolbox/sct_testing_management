@@ -64,9 +64,6 @@ class AcquisitionForm(forms.ModelForm):
         scanners = models.Acquisition.objects.order_by('scanner').values_list(
             'scanner', flat=True
         ).distinct()
-        centers = models.Acquisition.objects.order_by('center').values_list(
-            'center', flat=True
-        ).distinct()
         self.fields['scanner'].widget = DataListWidget('scanner', scanners)
         self.fields['center'].widget = DataListWidget('center', centers)
 
@@ -173,3 +170,22 @@ class ImageAdmin(admin.ModelAdmin):
         return mark_safe(obj.resolution)
     get_resolution.short_description = 'Resolution (sag, cor, ax)'
     get_resolution.allow_tags = True
+
+class CenterDictionaryForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        center_acronym = models.Image.objects.order_by('center_acronym').values_list(
+            'center_acronym', flat=True
+        ).distinct()
+        self.fields['center_acronym'].widget = DataListWidget('center_acronym', contrast)
+
+    class Meta:
+        model = models.Image
+        fields = '__all__'
+
+@admin.register(models.CenterDictionary)
+class CenterDictionaryAdmin(admin.ModelAdmin):
+    list_display = ('center_acronym ','center_name', 'center_country')
+    list_filter = ('center_acronym', 'center_name', 'center_city', 'center_country')
+    save_on_top = True
+    form = CenterDictionaryForm

@@ -60,11 +60,21 @@ class FileNameMixin(models.Model):
     class Meta:
         abstract = True
 
+class CenterDictionary(models.Model):
+    center_acronym = models.CharField(max_length=32)
+    center_name = models.CharField(max_length=32)
+    center_city = models.CharField(max_length=32)
+    center_country = models.CharField(max_length=32)
+
+    def __str__(self):
+        return f'{self.center_acronym}'
 
 class Acquisition(models.Model):
 
     date_of_scan = models.DateField(null=True, blank=True)
-    center = models.CharField(max_length=32)
+    center = models.ForeignKey(
+        CenterDictionary, related_name='center_acronym'
+        )
     scanner = models.CharField(max_length=32, null=True, blank=True)
     study = models.CharField(max_length=64)
     session = models.CharField(max_length=64)
