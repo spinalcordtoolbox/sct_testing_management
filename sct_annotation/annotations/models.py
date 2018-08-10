@@ -135,7 +135,7 @@ class Image(FileNameMixin):
     acquisition = models.ForeignKey(
         Acquisition, on_delete=models.CASCADE, related_name='images'
     )
-    contrast = models.CharField(max_length=32, choices=CONTRAST_CHOICES, default=''))
+    contrast = models.CharField(max_length=32, choices=CONTRAST_CHOICES, default='')
     start_coverage = models.CharField(max_length=16, choices=COVERAGE_CHOICES, default='')
     end_coverage = models.CharField(max_length=16, choices=COVERAGE_CHOICES, default='')
     orientation = models.CharField(max_length=16, null=True, blank=True)
@@ -143,7 +143,7 @@ class Image(FileNameMixin):
     # isotropic resolution
     is_isotropic = models.BooleanField(default=False)
     sagittal = models.FloatField(default=1.0)
-    corrinal = models.FloatField(default=1.0)
+    coronal = models.FloatField(default=1.0)
     axial = models.FloatField(default=1.0)
 
     # study
@@ -159,7 +159,7 @@ class Image(FileNameMixin):
 
     @property
     def resolution(self):
-        return f'{self.sagittal:4.2f} x {self.corrinal:4.2f} x {self.axial:4.2f}'
+        return f'{self.sagittal:4.2f} x {self.coronal:4.2f} x {self.axial:4.2f}'
 
     def populate_dimensions(self):
         """Calculate orientation and resolution of the image
@@ -172,7 +172,7 @@ class Image(FileNameMixin):
 
         self.is_isotropic = round(resolution[0], 5) == round(resolution[1], 5) == round(resolution[2], 5)
         self.sagittal = lookup[self.SAG_CONST]
-        self.corrinal = lookup[self.COR_CONST]
+        self.coronal = lookup[self.COR_CONST]
         self.axial = lookup[self.AX_CONST]
         self.orientation = self.PLANE_CONST[idxs[2]]
 
