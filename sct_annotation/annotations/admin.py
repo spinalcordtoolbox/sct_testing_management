@@ -114,7 +114,7 @@ class LabeledImageAdmin(admin.StackedInline):
 
 @admin.register(models.Acquisition)
 class AcquisitionAdmin(admin.ModelAdmin):
-    fields = ('session', ('center', 'study'), ('date_of_scan', 'scanner'))
+    fields = ('session', ('center', 'center_link', 'study'), ('date_of_scan', 'scanner'))
     list_display = ('center', 'study', 'session')
     list_filter = (
         'demographic__pathology',
