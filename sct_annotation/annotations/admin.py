@@ -122,6 +122,7 @@ class AcquisitionAdmin(admin.ModelAdmin):
         'images__ms_mapping',
         'images__gm_model',
         'images__pam50',
+        'center_link',        
     )
     search_fields = ('center', 'study', 'session')
     list_select_related = ('demographic',)
