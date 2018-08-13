@@ -22,4 +22,9 @@ class Migration(migrations.Migration):
                 ('center_country', models.CharField(max_length=32)),
             ],
         ),
+        migrations.AddField(
+            model_name='acquisition',
+            name='center_link',
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='annotations.CenterDictionary'),
+        ),
     ]
