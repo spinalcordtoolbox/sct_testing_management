@@ -174,10 +174,10 @@ class ImageAdmin(admin.ModelAdmin):
 class CenterDictionaryForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        center_acronym = models.Image.objects.order_by('center_acronym').values_list(
+        center_acronym = models.CenterDictionary.objects.order_by('center_acronym').values_list(
             'center_acronym', flat=True
         ).distinct()
-        self.fields['center_acronym'].widget = DataListWidget('center_acronym', contrast)
+        self.fields['center_acronym'].widget = DataListWidget('center_acronym', center_acronym)
 
     class Meta:
         model = models.Image

@@ -72,8 +72,9 @@ class CenterDictionary(models.Model):
 class Acquisition(models.Model):
 
     date_of_scan = models.DateField(null=True, blank=True)
-    center = models.ForeignKey(
-        CenterDictionary, related_name='center_acronym'
+    center = models.CharField(max_length=32)
+    center_link = models.ForeignKey(
+        CenterDictionary, related_name='center_acronym', null=True,
         )
     scanner = models.CharField(max_length=32, null=True, blank=True)
     study = models.CharField(max_length=64)
