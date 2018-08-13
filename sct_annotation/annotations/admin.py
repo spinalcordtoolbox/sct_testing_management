@@ -185,7 +185,6 @@ class CenterDictionaryForm(forms.ModelForm):
 
 @admin.register(models.CenterDictionary)
 class CenterDictionaryAdmin(admin.ModelAdmin):
-    list_display = ('center_acronym ','center_name', 'center_country')
     list_filter = ('center_acronym', 'center_name', 'center_city', 'center_country')
     save_on_top = True
     form = CenterDictionaryForm
