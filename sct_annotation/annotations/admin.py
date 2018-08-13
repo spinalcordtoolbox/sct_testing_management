@@ -65,6 +65,9 @@ class AcquisitionForm(forms.ModelForm):
             'scanner', flat=True
         ).distinct()
         self.fields['scanner'].widget = DataListWidget('scanner', scanners)
+        centers = models.Acquisition.objects.order_by('center').values_list(
+            'center', flat=True
+        ).distinct()
         self.fields['center'].widget = DataListWidget('center', centers)
 
     class Meta:
