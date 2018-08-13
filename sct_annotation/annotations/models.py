@@ -68,6 +68,8 @@ class CenterDictionary(models.Model):
 
     def __str__(self):
         return f'{self.center_acronym}'
+    class Meta:
+        verbose_name_plural = "Center Dictionary"
 
 class Acquisition(models.Model):
 
