@@ -31,6 +31,8 @@ services:
     environment:
       - POSTGRES_USER=sct_annotation
       - POSTGRES_PASSWORD=test
+    ports:
+      - "5432:5432"
 
 
   redis:
@@ -53,4 +55,3 @@ services:
       - postgres
     ports: []
     command: /start-celerybeat.sh
-
