@@ -74,7 +74,6 @@ class CenterDictionary(models.Model):
 class Acquisition(models.Model):
 
     date_of_scan = models.DateField(null=True, blank=True)
-    center = models.CharField(max_length=32)
     center_link = models.ForeignKey('CenterDictionary',null=True)
     scanner = models.CharField(max_length=32, null=True, blank=True)
     study = models.CharField(max_length=64)
@@ -83,8 +82,8 @@ class Acquisition(models.Model):
     def __str__(self):
         return f'{self.center} {self.study} {self.session}'
 
-    class Meta:
-        unique_together = (('center', 'study', 'session'))
+    # class Meta:
+        #unique_together = (('center', 'study', 'session'))
 
 
 class Demographic(models.Model):
