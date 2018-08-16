@@ -111,18 +111,35 @@ class LabeledImageAdmin(admin.StackedInline):
     can_delete = False
     form = LabeledImageForm
 
+class CenterDictionaryForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        center_acronym = models.CenterDictionary.objects.order_by('center_acronym').values_list(
+            'center_acronym', flat=True
+        ).distinct()
+        self.fields['center_acronym'].widget = DataListWidget('center_acronym', center_acronym)
+
+    class Meta:
+        model = models.Image
+        fields = '__all__'
+
+@admin.register(models.CenterDictionary)
+class CenterDictionaryAdmin(admin.ModelAdmin):
+    list_display = ('id','center_acronym', 'center_name', 'center_country')
+    list_filter = ('center_acronym', 'center_name', 'center_city', 'center_country')
+    save_on_top = True
+    form = CenterDictionaryForm
 
 @admin.register(models.Acquisition)
 class AcquisitionAdmin(admin.ModelAdmin):
-    fields = ('session', ('center', 'center_link', 'study'), ('date_of_scan', 'scanner'))
+    fields = ('session', ('center_link', 'study'), ('date_of_scan', 'scanner'))
     list_display = ('center', 'study', 'session')
     list_filter = (
         'demographic__pathology',
         'images__contrast',
         'images__ms_mapping',
         'images__gm_model',
-        'images__pam50',
-        'center_link',        
+        'images__pam50',      
     )
     search_fields = ('center', 'study', 'session')
     list_select_related = ('demographic',)
@@ -175,21 +192,4 @@ class ImageAdmin(admin.ModelAdmin):
     get_resolution.short_description = 'Resolution (sag, cor, ax)'
     get_resolution.allow_tags = True
 
-class CenterDictionaryForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        center_acronym = models.CenterDictionary.objects.order_by('center_acronym').values_list(
-            'center_acronym', flat=True
-        ).distinct()
-        self.fields['center_acronym'].widget = DataListWidget('center_acronym', center_acronym)
 
-    class Meta:
-        model = models.Image
-        fields = '__all__'
-
-@admin.register(models.CenterDictionary)
-class CenterDictionaryAdmin(admin.ModelAdmin):
-    list_display = ('center_acronym', 'center_name', 'center_country')
-    list_filter = ('center_acronym', 'center_name', 'center_city', 'center_country')
-    save_on_top = True
-    form = CenterDictionaryForm
